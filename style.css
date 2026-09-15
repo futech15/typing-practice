@@ -413,3 +413,129 @@ footer {
     flex-direction: column;
   }
 }
+
+/* Lesson Selection Cards */
+
+.section-description {
+margin-top: -8px;
+margin-bottom: 18px;
+color: #66727d;
+font-size: 14px;
+}
+
+.lesson-cards {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+gap: 16px;
+margin-top: 16px;
+margin-bottom: 28px;
+}
+
+.lesson-card-option {
+border: 2px solid #d9e1e8;
+border-radius: 12px;
+padding: 18px;
+background: #ffffff;
+transition: 0.2s ease;
+}
+
+.lesson-card-option:hover {
+border-color: #36454f;
+transform: translateY(-2px);
+}
+
+.lesson-card-option.selected {
+border-color: #fb8b24;
+box-shadow: 0 0 0 2px rgba(251, 139, 36, 0.15);
+}
+
+.lesson-card-option.completed {
+opacity: 0.55;
+background: #f1f3f5;
+border-color: #b8c0c8;
+}
+
+.lesson-card-top {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+gap: 10px;
+}
+
+.lesson-card-option h3 {
+margin: 0 0 6px;
+}
+
+.lesson-card-option p {
+margin: 0;
+}
+
+.lesson-card-description {
+margin-top: 14px !important;
+min-height: 42px;
+color: #66727d;
+font-size: 14px;
+line-height: 1.5;
+}
+
+.lesson-status {
+font-size: 12px;
+font-weight: 600;
+color: #68737d;
+white-space: nowrap;
+}
+
+.lesson-card-option.completed .lesson-status {
+color: #5f6b75;
+}
+
+.lesson-select-button {
+width: 100%;
+margin-top: 18px;
+padding: 10px;
+border: none;
+border-radius: 6px;
+background: #36454f;
+color: #ffffff;
+cursor: pointer;
+font-weight: 600;
+}
+
+.lesson-select-button:hover {
+background: #26343d;
+}
+
+.lesson-card-option.completed .lesson-select-button {
+background: #7c8790;
+}
+
+.lesson-card-option.completed .lesson-select-button:hover {
+background: #626d75;
+}
+
+/* Disabled typing area */
+
+#typingInput:disabled {
+background: #f1f3f5;
+cursor: not-allowed;
+}
+
+/* Mobile Layout */
+
+@media (max-width: 600px) {
+.lesson-card-top {
+flex-direction: column;
+}
+
+.lesson-status {
+margin-top: 4px;
+}
+
+.button-row {
+flex-direction: column;
+}
+
+.button-row button {
+width: 100%;
+}
+}
