@@ -1,3 +1,4 @@
+// Safely gather all 4 lesson definitions
 const rawLessons = [
   typeof lesson1 !== "undefined" ? lesson1 : null,
   typeof lesson2 !== "undefined" ? lesson2 : null,
@@ -14,19 +15,22 @@ let isRunning = false;
 let startTime = null;
 let timerInterval = null;
 
-// Track indices that were ever typed incorrectly
+// Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
-// Page elements
+// DOM Element References
 const lessonCards = document.getElementById("lessonCards");
 const lessonTitle = document.getElementById("lessonTitle");
 const lessonDescription = document.getElementById("lessonDescription");
 const lessonNumber = document.getElementById("lessonNumber");
 const lessonText = document.getElementById("lessonText");
 const typingInput = document.getElementById("typingInput");
+const progressBar = document.getElementById("progressBar");
+
 const startButton = document.getElementById("startButton");
 const resetButton = document.getElementById("resetButton");
 const nextButton = document.getElementById("nextButton");
+const clearResultsButton = document.getElementById("clearResultsButton");
 
 const timerDisplay = document.getElementById("timer");
 const wpmDisplay = document.getElementById("wpm");
@@ -38,10 +42,13 @@ const resultWpm = document.getElementById("resultWpm");
 const resultAccuracy = document.getElementById("resultAccuracy");
 const resultErrors = document.getElementById("resultErrors");
 const resultTime = document.getElementById("resultTime");
+const resultMessage = document.getElementById("resultMessage");
 
 const overallLessons = document.getElementById("overallLessons");
 const overallWpm = document.getElementById("overallWpm");
 const overallAccuracy = document.getElementById("overallAccuracy");
+const overallTime = document.getElementById("overallTime");
+const completedLessonsContainer = document.getElementById("completedLessons");
 
 let typedCharacters = 0;
 let correctCharacters = 0;
@@ -55,12 +62,13 @@ function initializeApp() {
   renderLessonCards();
   loadLesson(0);
   updateOverallStats();
-  displayCompletedLessons();
+  renderCompletedLessonsList();
 
-  startButton.onclick = startLesson;
-  resetButton.onclick = resetLesson;
-  nextButton.onclick = goToNextLesson;
-  typingInput.oninput = handleTyping;
+  if (startButton) startButton.onclick = startLesson;
+  if (resetButton) resetButton.onclick = resetLesson;
+  if (nextButton) nextButton.onclick = goToNextLesson;
+  if (clearResultsButton) clearResultsButton.onclick = clearAllResults;
+  if (typingInput) typingInput.oninput = handleTyping;
 }
 
 function renderLessonCards() {
@@ -101,7 +109,7 @@ function loadLesson(index) {
 }
 
 function updateSelectedCard() {
-  const cards = document.querySelectorAll(".lesson-cards .lesson-card");
+  const cards = document.querySelectorAll("#lessonCards .lesson-card");
   cards.forEach((card, index) => {
     card.classList.toggle("selected", index === selectedLessonIndex);
   });
@@ -114,10 +122,12 @@ function startLesson() {
   startTime = Date.now();
   mistypedIndices.clear();
 
-  startButton.disabled = true;
-  typingInput.disabled = false;
-  typingInput.value = "";
-  typingInput.focus();
+  if (startButton) startButton.disabled = true;
+  if (typingInput) {
+    typingInput.disabled = false;
+    typingInput.value = "";
+    typingInput.focus();
+  }
 
   timerInterval = setInterval(updateTimer, 1000);
 }
@@ -133,12 +143,15 @@ function resetLesson() {
   correctCharacters = 0;
   incorrectCharacters = 0;
 
-  typingInput.value = "";
-  typingInput.disabled = true;
+  if (typingInput) {
+    typingInput.value = "";
+    typingInput.disabled = true;
+  }
 
-  startButton.disabled = false;
+  if (startButton) startButton.disabled = false;
   if (nextButton) nextButton.style.display = "none";
   if (resultsSection) resultsSection.style.display = "none";
+  if (progressBar) progressBar.style.width = "0%";
 
   if (timerDisplay) timerDisplay.textContent = "0";
   if (wpmDisplay) wpmDisplay.textContent = "0";
@@ -173,20 +186,25 @@ function handleTyping(event) {
   correctCharacters = 0;
   incorrectCharacters = 0;
 
+  // Update progress bar percentage
+  if (progressBar && selectedLesson) {
+    const progressPercent = Math.min((value.length / selectedLesson.text.length) * 100, 100);
+    progressBar.style.width = `${progressPercent}%`;
+  }
+
   characters.forEach((character, index) => {
     character.classList.remove("correct", "incorrect", "corrected", "current");
 
     if (index < value.length) {
       if (value[index] === selectedLesson.text[index]) {
-        // If it was wrong before, mark as corrected (yellow)
         if (mistypedIndices.has(index)) {
-          character.classList.add("corrected");
+          character.classList.add("corrected"); // Yellow: fixed error
         } else {
-          character.classList.add("correct");
+          character.classList.add("correct");   // Green: correct on first attempt
         }
         correctCharacters++;
       } else {
-        character.classList.add("incorrect");
+        character.classList.add("incorrect");    // Red: currently wrong
         mistypedIndices.add(index);
         incorrectCharacters++;
       }
@@ -234,8 +252,8 @@ function finishLesson() {
   isRunning = false;
   clearInterval(timerInterval);
 
-  typingInput.disabled = true;
-  startButton.disabled = false;
+  if (typingInput) typingInput.disabled = true;
+  if (startButton) startButton.disabled = false;
 
   const elapsedSeconds = Math.max((Date.now() - startTime) / 1000, 1);
   const minutes = elapsedSeconds / 60;
@@ -251,15 +269,14 @@ function finishLesson() {
   if (resultErrors) resultErrors.textContent = incorrectCharacters;
   if (resultTime) resultTime.textContent = `${Math.floor(elapsedSeconds)} sec`;
 
+  if (resultMessage) {
+    resultMessage.textContent = accuracy >= 95 ? "Great job! Excellent accuracy!" : "Good effort! Keep practicing to improve accuracy.";
+  }
+
   if (resultsSection) resultsSection.style.display = "block";
 
-  // Show Next Lesson button if more lessons exist
   if (nextButton) {
-    if (selectedLessonIndex < lessons.length - 1) {
-      nextButton.style.display = "inline-block";
-    } else {
-      nextButton.style.display = "none";
-    }
+    nextButton.style.display = selectedLessonIndex < lessons.length - 1 ? "inline-block" : "none";
   }
 
   saveLessonResult({
@@ -269,11 +286,11 @@ function finishLesson() {
     accuracy,
     errors: incorrectCharacters,
     time: Math.floor(elapsedSeconds),
-    completedAt: new Date().toISOString()
+    completedAt: new Date().toLocaleDateString()
   });
 
   updateOverallStats();
-  displayCompletedLessons();
+  renderCompletedLessonsList();
 }
 
 function goToNextLesson() {
@@ -311,25 +328,55 @@ function updateOverallStats() {
   if (results.length === 0) {
     if (overallWpm) overallWpm.textContent = "0";
     if (overallAccuracy) overallAccuracy.textContent = "0%";
+    if (overallTime) overallTime.textContent = "0 sec";
     return;
   }
 
   const averageWpm = Math.round(results.reduce((sum, res) => sum + res.wpm, 0) / results.length);
   const averageAccuracy = Math.round(results.reduce((sum, res) => sum + res.accuracy, 0) / results.length);
+  const totalTime = results.reduce((sum, res) => sum + res.time, 0);
 
   if (overallWpm) overallWpm.textContent = averageWpm;
   if (overallAccuracy) overallAccuracy.textContent = `${averageAccuracy}%`;
+  if (overallTime) overallTime.textContent = `${totalTime} sec`;
 }
 
-function displayCompletedLessons() {
+function renderCompletedLessonsList() {
   const results = getSavedResults();
   const completedLessonIds = results.map((result) => result.lessonId);
-  const cards = document.querySelectorAll(".lesson-cards .lesson-card");
-
+  
+  // Lighten completed cards in selector
+  const cards = document.querySelectorAll("#lessonCards .lesson-card");
   cards.forEach((card, index) => {
     const lesson = lessons[index];
     if (lesson) {
       card.classList.toggle("completed", completedLessonIds.includes(lesson.id));
     }
   });
+
+  // Render bottom summary table
+  if (!completedLessonsContainer) return;
+
+  if (results.length === 0) {
+    completedLessonsContainer.innerHTML = `<p class="empty-message">No lessons completed yet.</p>`;
+    return;
+  }
+
+  let html = `<ul class="completed-lessons-list">`;
+  results.forEach((item) => {
+    html += `
+      <li class="completed-item">
+        <strong>${item.lessonTitle}</strong> — ${item.wpm} WPM | ${item.accuracy}% Accuracy | ${item.time}s
+      </li>
+    `;
+  });
+  html += `</ul>`;
+
+  completedLessonsContainer.innerHTML = html;
+}
+
+function clearAllResults() {
+  localStorage.removeItem(STORAGE_KEY);
+  updateOverallStats();
+  renderCompletedLessonsList();
 }
