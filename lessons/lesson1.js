@@ -1,6 +1,6 @@
 const lesson1 = {
   id: 1,
-  title: "Lesson 1: Basic Typing",
-  description: "Practice typing this short paragraph accurately.",
-  text: "Typing is an important computer skill. Practice every day to improve your speed, accuracy, and confidence."
+  title: "Lesson 1: F, G, H, and J",
+  description: "Practice using the four home-row keys: F, G, H, and J.",
+  text: "fghj jhgf fjgh ghjf hfgj jfg hgjf gfhh jjgg ffhh gjfj hgjg fjhf ghgj jhfg fgjh hgjf"
 };
