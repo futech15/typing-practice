@@ -539,3 +539,92 @@ flex-direction: column;
 width: 100%;
 }
 }
+
+/* Lesson Cards Container */
+.lesson-selector-section {
+  margin-bottom: 2rem;
+}
+
+.lesson-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Base Lesson Card */
+.lesson-card {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lesson-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.lesson-card.selected {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+}
+
+/* Completed Lesson Card Styling (Lighter) */
+.lesson-card.completed {
+  opacity: 0.55;
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.lesson-card-number {
+  font-weight: bold;
+  color: #2563eb;
+  margin-bottom: 0.25rem;
+}
+
+.lesson-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.lesson-card-description {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Typing Text Display Fix */
+.text-display {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  min-height: 80px;
+  color: #334155; /* Ensures default text is visible */
+}
+
+.typing-character {
+  color: #475569;
+}
+
+.typing-character.correct {
+  color: #16a34a;
+  background-color: #dcfce7;
+}
+
+.typing-character.incorrect {
+  color: #dc2626;
+  background-color: #fee2e2;
+}
+
+.typing-character.current {
+  border-bottom: 2px solid #2563eb;
+}
