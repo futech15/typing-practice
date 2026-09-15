@@ -628,3 +628,26 @@ width: 100%;
 .typing-character.current {
   border-bottom: 2px solid #2563eb;
 }
+
+/* Correctly typed character on first try */
+.typing-character.correct {
+  color: #15803d;
+  background-color: #dcfce7;
+}
+
+/* Incorrect character */
+.typing-character.incorrect {
+  color: #b91c1c;
+  background-color: #fee2e2;
+}
+
+/* Corrected character after fixing with backspace */
+.typing-character.corrected {
+  color: #a16207;
+  background-color: #fef9c3;
+}
+
+/* Current character underline indicator */
+.typing-character.current {
+  border-bottom: 2px solid #2563eb;
+}
