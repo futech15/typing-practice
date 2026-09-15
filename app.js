@@ -2,6 +2,7 @@ const lessons = [
   lesson1
   lesson2
   lesson3
+lesson4
 ];
 
 const STORAGE_KEY = "typingPracticeResults";
