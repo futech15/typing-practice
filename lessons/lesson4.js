@@ -1,5 +1,4 @@
-window.lessonsList = window.lessonsList || [];
-window.lessonsList.push({
+var lesson4 = {
   id: 4,
   title: "Lesson 4: Full Home Row",
   description: "Combine all home-row keys together.",
