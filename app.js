@@ -43,18 +43,30 @@ let typedCharacters = 0;
 let correctCharacters = 0;
 let incorrectCharacters = 0;
 
-document.addEventListener("DOMContentLoaded", initializeApp);
-
+initializeApp();
 function initializeApp() {
+  console.log("Application started");
+
   renderLessonCards();
   loadLesson(0);
   updateOverallStats();
   displayCompletedLessons();
 
-  startButton.addEventListener("click", startLesson);
-  resetButton.addEventListener("click", resetLesson);
-  nextButton.addEventListener("click", goToNextLesson);
-  typingInput.addEventListener("input", handleTyping);
+  startButton.onclick = function () {
+    startLesson();
+  };
+
+  resetButton.onclick = function () {
+    resetLesson();
+  };
+
+  nextButton.onclick = function () {
+    goToNextLesson();
+  };
+
+  typingInput.oninput = function () {
+    handleTyping();
+  };
 }
 
 function renderLessonCards() {
