@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,165 +10,203 @@
 
   <div class="app-container">
 
-```
-<header class="app-header">
-  <div>
-    <h1>Typing Practice</h1>
-    <p class="subtitle">Improve your typing speed and accuracy</p>
-  </div>
-
-  <div class="overall-stats">
-    <h3>Overall Average</h3>
-
-    <div class="overall-stat-row">
-      <span>WPM</span>
-      <strong id="overallWpm">0</strong>
-    </div>
-
-    <div class="overall-stat-row">
-      <span>Accuracy</span>
-      <strong id="overallAccuracy">0%</strong>
-    </div>
-
-    <div class="overall-stat-row">
-      <span>Time</span>
-      <strong id="overallTime">0 sec</strong>
-    </div>
-  </div>
-</header>
-
-<main>
-
-  <!-- All Lessons -->
-  <section class="lesson-selector-section">
-    <h2>Choose a Lesson</h2>
-    <p class="section-description">
-      Select a lesson to begin practicing. Completed lessons appear lighter.
-    </p>
-
-    <div id="lessonCards" class="lesson-cards"></div>
-  </section>
-
-  <!-- Current Lesson -->
-  <section class="lesson-card">
-
-    <div class="lesson-heading">
+    <header class="app-header">
       <div>
-        <h2 id="lessonTitle">Lesson 1</h2>
-        <p id="lessonDescription"></p>
+        <h1>Typing Practice</h1>
+        <p class="subtitle">Improve your typing speed and accuracy</p>
       </div>
 
-      <div class="lesson-number" id="lessonNumber">1</div>
-    </div>
+      <div class="overall-stats">
+        <h3>Overall Average</h3>
 
-    <div class="text-display" id="textDisplay"></div>
+        <div class="overall-stat-row">
+          <span>Lessons</span>
+          <strong id="overallLessons">0/4</strong>
+        </div>
 
-    <textarea
-      id="typingInput"
-      placeholder="Click Start Lesson, then type the text above..."
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      disabled
-    ></textarea>
-
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <div class="live-stats">
-      <div class="stat-box">
-        <span>WPM</span>
-        <strong id="liveWpm">0</strong>
-      </div>
-
-      <div class="stat-box">
-        <span>Accuracy</span>
-        <strong id="liveAccuracy">100%</strong>
-      </div>
-
-      <div class="stat-box">
-        <span>Time</span>
-        <strong id="liveTime">0 sec</strong>
-      </div>
-    </div>
-
-    <div class="button-row">
-      <button id="startButton" class="primary-button">
-        Start Lesson
-      </button>
-
-      <button id="resetButton" class="secondary-button">
-        Reset
-      </button>
-
-      <button id="nextButton" class="secondary-button" style="display: none;">
-        Next Lesson
-      </button>
-    </div>
-
-    <div class="lesson-result" id="lessonResult">
-      <h3>Lesson Result</h3>
-
-      <div class="result-grid">
-        <div>
+        <div class="overall-stat-row">
           <span>WPM</span>
-          <strong id="resultWpm">0</strong>
+          <strong id="overallWpm">0</strong>
         </div>
 
-        <div>
+        <div class="overall-stat-row">
           <span>Accuracy</span>
-          <strong id="resultAccuracy">0%</strong>
+          <strong id="overallAccuracy">0%</strong>
         </div>
 
-        <div>
+        <div class="overall-stat-row">
           <span>Time</span>
-          <strong id="resultTime">0 sec</strong>
+          <strong id="overallTime">0 sec</strong>
         </div>
       </div>
+    </header>
 
-      <p id="resultMessage"></p>
-    </div>
+    <main>
 
-  </section>
+      <!-- Lesson Selection -->
+      <section class="lesson-selector-section">
+        <h2>Choose a Lesson</h2>
 
-  <!-- Completed Lessons -->
-  <section class="completed-lessons-section">
-    <div class="section-heading">
-      <h2>Completed Lessons</h2>
+        <p class="section-description">
+          Select a lesson to begin practicing. Completed lessons appear lighter.
+        </p>
 
-      <button id="clearResultsButton" class="clear-button">
-        Clear All Results
-      </button>
-    </div>
+        <div id="lessonCards" class="lesson-cards"></div>
+      </section>
 
-    <div id="completedLessons">
-      <p class="empty-message">No lessons completed yet.</p>
-    </div>
-  </section>
+      <!-- Current Lesson -->
+      <section class="lesson-card">
 
-</main>
+        <div class="lesson-heading">
+          <div>
+            <h2 id="lessonTitle">Lesson 1</h2>
+            <p id="lessonDescription"></p>
+          </div>
 
-<footer>
-  Typing Practice App
-</footer>
-```
+          <div class="lesson-number" id="lessonNumber">1</div>
+        </div>
+
+        <!-- Text students must type -->
+        <div class="text-display" id="lessonText"></div>
+
+        <!-- Typing area -->
+        <textarea
+          id="typingInput"
+          placeholder="Click Start Lesson, then type the text above..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          disabled
+        ></textarea>
+
+        <!-- Progress -->
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Live Statistics -->
+        <div class="live-stats">
+
+          <div class="stat-box">
+            <span>WPM</span>
+            <strong id="wpm">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>Accuracy</span>
+            <strong id="accuracy">100%</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>Time</span>
+            <strong id="timer">0</strong>
+          </div>
+
+          <div class="stat-box">
+            <span>Errors</span>
+            <strong id="errors">0</strong>
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-row">
+
+          <button id="startButton" class="primary-button">
+            Start Lesson
+          </button>
+
+          <button id="resetButton" class="secondary-button">
+            Reset
+          </button>
+
+          <button
+            id="nextButton"
+            class="secondary-button"
+            style="display: none;"
+          >
+            Next Lesson
+          </button>
+
+        </div>
+
+        <!-- Lesson Result -->
+        <div
+          class="lesson-result"
+          id="resultsSection"
+          style="display: none;"
+        >
+
+          <h3>Lesson Result</h3>
+
+          <div class="result-grid">
+
+            <div>
+              <span>WPM</span>
+              <strong id="resultWpm">0</strong>
+            </div>
+
+            <div>
+              <span>Accuracy</span>
+              <strong id="resultAccuracy">0%</strong>
+            </div>
+
+            <div>
+              <span>Errors</span>
+              <strong id="resultErrors">0</strong>
+            </div>
+
+            <div>
+              <span>Time</span>
+              <strong id="resultTime">0 sec</strong>
+            </div>
+
+          </div>
+
+          <p id="resultMessage"></p>
+
+        </div>
+
+      </section>
+
+      <!-- Completed Lessons -->
+      <section class="completed-lessons-section">
+
+        <div class="section-heading">
+          <h2>Completed Lessons</h2>
+
+          <button
+            id="clearResultsButton"
+            class="clear-button"
+          >
+            Clear All Results
+          </button>
+        </div>
+
+        <div id="completedLessons">
+          <p class="empty-message">
+            No lessons completed yet.
+          </p>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer>
+      Typing Practice App
+    </footer>
 
   </div>
 
   <!-- Lesson Files -->
-
   <script src="lessons/lesson1.js"></script>
-
   <script src="lessons/lesson2.js"></script>
-
   <script src="lessons/lesson3.js"></script>
-
   <script src="lessons/lesson4.js"></script>
 
   <!-- Main Application -->
-
   <script src="app.js"></script>
 
 </body>
