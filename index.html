@@ -1,311 +1,146 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Typing Practice</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #dff6ff, #e8ddff);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        color: #263238;
-    }
-
-    .container {
-        width: 100%;
-        max-width: 850px;
-        background: white;
-        border-radius: 24px;
-        padding: 35px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        text-align: center;
-    }
-
-    h1 {
-        margin-top: 0;
-        color: #36454F;
-    }
-
-    .subtitle {
-        color: #607d8b;
-        margin-bottom: 30px;
-    }
-
-    .lesson-text {
-        font-size: 36px;
-        letter-spacing: 4px;
-        line-height: 1.8;
-        margin: 25px 0;
-        min-height: 70px;
-        word-wrap: break-word;
-    }
-
-    .letter {
-        padding: 3px;
-        border-radius: 5px;
-    }
-
-    .correct {
-        color: #16a34a;
-    }
-
-    .wrong {
-        color: #dc2626;
-        background: #fee2e2;
-    }
-
-    .corrected {
-        color: #ca8a04;
-        background: #fef9c3;
-    }
-
-    .current {
-        border-bottom: 4px solid #3b82f6;
-    }
-
-    .typing-box {
-        width: 100%;
-        padding: 16px;
-        font-size: 22px;
-        border: 2px solid #d1d5db;
-        border-radius: 12px;
-        outline: none;
-        text-align: center;
-    }
-
-    .typing-box:focus {
-        border-color: #3b82f6;
-    }
-
-    .stats {
-        display: flex;
-        justify-content: space-around;
-        margin: 25px 0;
-        font-size: 18px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .stat {
-        background: #f3f4f6;
-        padding: 12px 20px;
-        border-radius: 12px;
-    }
-
-    button {
-        background: #36454F;
-        color: white;
-        border: none;
-        padding: 13px 25px;
-        border-radius: 10px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #263238;
-    }
-
-    .result {
-        margin-top: 25px;
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .instructions {
-        color: #78909c;
-        font-size: 14px;
-        margin-top: 20px;
-    }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Practice</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
+  <div class="app-container">
 
-    <h1>Typing Practice</h1>
-    <div class="subtitle">Lesson 1 — Home Row</div>
+    <header class="app-header">
+      <div>
+        <h1>Typing Practice</h1>
+        <p class="subtitle">Improve your typing speed and accuracy</p>
+      </div>
 
-    <div id="lessonText" class="lesson-text"></div>
+      <div class="overall-stats">
+        <h3>Overall Average</h3>
+        <div class="overall-stat-row">
+          <span>WPM</span>
+          <strong id="overallWpm">0</strong>
+        </div>
+        <div class="overall-stat-row">
+          <span>Accuracy</span>
+          <strong id="overallAccuracy">0%</strong>
+        </div>
+        <div class="overall-stat-row">
+          <span>Time</span>
+          <strong id="overallTime">0 sec</strong>
+        </div>
+      </div>
+    </header>
 
-    <input
-        type="text"
-        id="typingBox"
-        class="typing-box"
-        placeholder="Start typing here..."
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-    >
+    <main>
 
-    <div class="stats">
-        <div class="stat">WPM: <strong id="wpm">0</strong></div>
-        <div class="stat">Accuracy: <strong id="accuracy">100%</strong></div>
-        <div class="stat">Time: <strong id="time">0</strong>s</div>
-    </div>
+      <section class="lesson-selector-section">
+        <label for="lessonSelect">Choose a lesson:</label>
+        <select id="lessonSelect"></select>
+      </section>
 
-    <button onclick="restartLesson()">Restart Lesson</button>
+      <section class="lesson-card">
 
-    <div id="result" class="result"></div>
+        <div class="lesson-heading">
+          <div>
+            <h2 id="lessonTitle">Lesson 1</h2>
+            <p id="lessonDescription"></p>
+          </div>
 
-    <div class="instructions">
-        Type the letters exactly as shown. Corrected mistakes appear yellow.
-    </div>
+          <div class="lesson-number" id="lessonNumber">1</div>
+        </div>
 
-</div>
+        <div class="text-display" id="textDisplay"></div>
 
-<script>
-const lesson = "asdf jkl; asdf jkl;";
+        <textarea
+          id="typingInput"
+          placeholder="Start typing here..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
 
-const lessonText = document.getElementById("lessonText");
-const typingBox = document.getElementById("typingBox");
-const wpmDisplay = document.getElementById("wpm");
-const accuracyDisplay = document.getElementById("accuracy");
-const timeDisplay = document.getElementById("time");
-const resultDisplay = document.getElementById("result");
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
 
-let startTime = null;
-let timerInterval = null;
-let finished = false;
-let mistakePositions = new Set();
+        <div class="live-stats">
+          <div class="stat-box">
+            <span>WPM</span>
+            <strong id="liveWpm">0</strong>
+          </div>
 
-function renderText() {
-    const typed = typingBox.value;
+          <div class="stat-box">
+            <span>Accuracy</span>
+            <strong id="liveAccuracy">100%</strong>
+          </div>
 
-    lessonText.innerHTML = "";
+          <div class="stat-box">
+            <span>Time</span>
+            <strong id="liveTime">0 sec</strong>
+          </div>
+        </div>
 
-    for (let i = 0; i < lesson.length; i++) {
-        const span = document.createElement("span");
-        span.className = "letter";
-        span.textContent = lesson[i];
+        <div class="button-row">
+          <button id="startButton" class="primary-button">
+            Start Lesson
+          </button>
 
-        if (i < typed.length) {
-            if (typed[i] === lesson[i]) {
-                if (mistakePositions.has(i)) {
-                    span.classList.add("corrected");
-                } else {
-                    span.classList.add("correct");
-                }
-            } else {
-                span.classList.add("wrong");
-            }
-        }
+          <button id="resetButton" class="secondary-button">
+            Reset
+          </button>
+        </div>
 
-        if (i === typed.length && !finished) {
-            span.classList.add("current");
-        }
+        <div class="lesson-result" id="lessonResult">
+          <h3>Lesson Result</h3>
 
-        lessonText.appendChild(span);
-    }
-}
+          <div class="result-grid">
+            <div>
+              <span>WPM</span>
+              <strong id="resultWpm">0</strong>
+            </div>
 
-function startTimer() {
-    if (!startTime) {
-        startTime = Date.now();
+            <div>
+              <span>Accuracy</span>
+              <strong id="resultAccuracy">0%</strong>
+            </div>
 
-        timerInterval = setInterval(() => {
-            const seconds = Math.floor((Date.now() - startTime) / 1000);
-            timeDisplay.textContent = seconds;
-            updateStats();
-        }, 1000);
-    }
-}
+            <div>
+              <span>Time</span>
+              <strong id="resultTime">0 sec</strong>
+            </div>
+          </div>
 
-function updateStats() {
-    if (!startTime) return;
+          <p id="resultMessage"></p>
+        </div>
 
-    const elapsedMinutes = (Date.now() - startTime) / 60000;
-    const typedCharacters = typingBox.value.length;
+      </section>
 
-    const wpm = elapsedMinutes > 0
-        ? Math.round((typedCharacters / 5) / elapsedMinutes)
-        : 0;
+      <section class="completed-lessons-section">
+        <div class="section-heading">
+          <h2>Completed Lessons</h2>
+          <button id="clearResultsButton" class="clear-button">
+            Clear All Results
+          </button>
+        </div>
 
-    let correct = 0;
+        <div id="completedLessons">
+          <p class="empty-message">No lessons completed yet.</p>
+        </div>
+      </section>
 
-    for (let i = 0; i < typingBox.value.length; i++) {
-        if (typingBox.value[i] === lesson[i]) {
-            correct++;
-        }
-    }
+    </main>
 
-    const accuracy = typedCharacters > 0
-        ? Math.round((correct / typedCharacters) * 100)
-        : 100;
+    <footer>
+      Typing Practice App
+    </footer>
 
-    wpmDisplay.textContent = wpm;
-    accuracyDisplay.textContent = accuracy + "%";
-}
+  </div>
 
-typingBox.addEventListener("input", () => {
-    if (finished) return;
-
-    startTimer();
-
-    const typed = typingBox.value;
-
-    // Record positions where the student made a mistake.
-    for (let i = 0; i < typed.length; i++) {
-        if (typed[i] !== lesson[i]) {
-            mistakePositions.add(i);
-        }
-    }
-
-    renderText();
-    updateStats();
-
-    if (typed === lesson) {
-        finishLesson();
-    }
-});
-
-function finishLesson() {
-    finished = true;
-    clearInterval(timerInterval);
-
-    const seconds = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
-    const words = lesson.trim().split(/\s+/).length;
-    const wpm = Math.round((words / seconds) * 60);
-
-    resultDisplay.textContent =
-        "Lesson Complete! " + wpm + " WPM — Great job!";
-}
-
-function restartLesson() {
-    clearInterval(timerInterval);
-
-    startTime = null;
-    timerInterval = null;
-    finished = false;
-    mistakePositions = new Set();
-
-    typingBox.value = "";
-    wpmDisplay.textContent = "0";
-    accuracyDisplay.textContent = "100%";
-    timeDisplay.textContent = "0";
-    resultDisplay.textContent = "";
-
-    renderText();
-    typingBox.focus();
-}
-
-renderText();
-</script>
+  <script src="lessons/lesson1.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
-```
