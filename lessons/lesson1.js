@@ -1,5 +1,4 @@
 window.lessonsList = window.lessonsList || [];
-
 window.lessonsList.push({
   id: 1,
   title: "Lesson 1: F, G, H, and J",
