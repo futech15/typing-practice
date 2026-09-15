@@ -43,17 +43,41 @@
 
     <main>
 
-      <!-- Lesson Selection -->
-      <section class="lesson-selector-section">
-        <div class="section-header">
-          <h2>Choose a Lesson</h2>
-          <p class="section-description">
-            Select a lesson to begin practicing. Completed lessons appear lighter.
-          </p>
-        </div>
+   <!-- Lesson Selection -->
+<section class="lesson-selector-section">
+  <div class="section-header">
+    <h2>Choose a Lesson</h2>
+    <p class="section-description">
+      Select a lesson to begin practicing. Completed lessons appear lighter.
+    </p>
+  </div>
 
-        <div id="lessonCards" class="lesson-cards"></div>
-      </section>
+  <div id="lessonCards" class="lesson-cards">
+    <button type="button" class="lesson-card selected" onclick="loadLesson(0)">
+      <div class="lesson-card-number">Lesson 1</div>
+      <div class="lesson-card-title">Lesson 1: F, G, H, and J</div>
+      <div class="lesson-card-description">Practice using the four home-row keys: F, G, H, and J.</div>
+    </button>
+
+    <button type="button" class="lesson-card" onclick="loadLesson(1)">
+      <div class="lesson-card-number">Lesson 2</div>
+      <div class="lesson-card-title">Lesson 2: D, K, S, and L</div>
+      <div class="lesson-card-description">Expand your home-row reach with D, K, S, and L.</div>
+    </button>
+
+    <button type="button" class="lesson-card" onclick="loadLesson(2)">
+      <div class="lesson-card-number">Lesson 3</div>
+      <div class="lesson-card-title">Lesson 3: A and Semi-colon (;)</div>
+      <div class="lesson-card-description">Master the outer home-row keys: A and ;.</div>
+    </button>
+
+    <button type="button" class="lesson-card" onclick="loadLesson(3)">
+      <div class="lesson-card-number">Lesson 4</div>
+      <div class="lesson-card-title">Lesson 4: Full Home Row</div>
+      <div class="lesson-card-description">Combine all home-row keys together.</div>
+    </button>
+  </div>
+</section>
 
       <!-- Current Lesson -->
       <section class="lesson-card">
