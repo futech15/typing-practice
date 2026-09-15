@@ -1,10 +1,5 @@
 // Safely load lessons without crashing if lesson2-4 files are missing or incomplete
-const rawLessons = [
-  typeof lesson1 !== "undefined" ? lesson1 : null,
-  typeof lesson2 !== "undefined" ? lesson2 : null,
-  typeof lesson3 !== "undefined" ? lesson3 : null,
-  typeof lesson4 !== "undefined" ? lesson4 : null
-];
+const lessons = window.lessonsList || [];
 
 const lessons = rawLessons.filter((lesson) => lesson !== null);
 
