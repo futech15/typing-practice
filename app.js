@@ -357,16 +357,18 @@ function updateOverallStats() {
     return;
   }
 
+  // Calculate true average WPM across all completed lesson attempts
   const averageWpm = Math.round(
-    validResults.reduce((sum, res) => sum + res.wpm, 0) / validResults.length
+    validResults.reduce((sum, res) => sum + Number(res.wpm || 0), 0) / validResults.length
   );
 
+  // Calculate true average Accuracy across all completed lesson attempts
   const averageAccuracy = Math.round(
-    validResults.reduce((sum, res) => sum + res.accuracy, 0) / validResults.length
+    validResults.reduce((sum, res) => sum + Number(res.accuracy || 0), 0) / validResults.length
   );
 
   const totalTime = validResults.reduce(
-    (sum, res) => sum + res.time,
+    (sum, res) => sum + Number(res.time || 0),
     0
   );
 
