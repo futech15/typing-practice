@@ -192,9 +192,10 @@ textarea:disabled {
 
 .live-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 15px;
   margin: 25px 0;
+  width: 100%;
 }
 
 .stat-box {
@@ -394,7 +395,11 @@ footer {
     padding: 20px;
   }
 
-  .live-stats,
+  .live-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
   .result-grid {
     grid-template-columns: 1fr;
   }
