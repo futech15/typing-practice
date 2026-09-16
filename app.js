@@ -267,20 +267,27 @@ function finishLesson() {
 
   const elapsedSeconds = Math.max((Date.now() - startTime) / 1000, 1);
   const minutes = elapsedSeconds / 60;
-  const wpm = Math.round((typedCharacters / 5) / minutes);
+  
+  const currentInputLength = typingInput ? typingInput.value.length : 0;
+  const wordsTyped = currentInputLength / 5;
+  const wpm = Math.round(wordsTyped / minutes);
 
-  const accuracy =
-    typedCharacters > 0
-      ? Math.round((correctCharacters / typedCharacters) * 100)
-      : 100;
+  // Total attempts includes characters typed plus total unique mistakes made
+  const totalAttempts = currentInputLength + incorrectCharacters;
+  const accuracy = totalAttempts > 0 
+    ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
+    : 100;
 
+  // Update Lesson Result Display Elements
   if (resultWpm) resultWpm.textContent = wpm;
   if (resultAccuracy) resultAccuracy.textContent = `${accuracy}%`;
   if (resultErrors) resultErrors.textContent = incorrectCharacters;
   if (resultTime) resultTime.textContent = `${Math.floor(elapsedSeconds)} sec`;
 
   if (resultMessage) {
-    resultMessage.textContent = accuracy >= 95 ? "Great job! Excellent accuracy!" : "Good effort! Keep practicing to improve accuracy.";
+    resultMessage.textContent = accuracy >= 95 
+      ? "Great job! Excellent accuracy!" 
+      : "Good effort! Keep practicing to improve accuracy.";
   }
 
   if (resultsSection) resultsSection.style.display = "block";
