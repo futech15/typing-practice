@@ -598,17 +598,32 @@ width: 100%;
   margin-top: 0.25rem;
 }
 
-/* Typing Text Display Fix */
+/* Typing Text Display */
 .text-display {
+  width: 100%;
+  max-width: 100%;
+  min-height: 150px;
+  padding: 25px;
+  margin-bottom: 20px;
+
+  box-sizing: border-box;
+  overflow: hidden;
+
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 1rem;
-  font-family: monospace;
-  font-size: 1.25rem;
-  letter-spacing: 1px;
-  min-height: 80px;
-  color: #334155; /* Ensures default text is visible */
+  border-radius: 10px;
+
+  font-family: "Courier New", monospace;
+  font-size: 21px;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+
+  color: #334155;
+
+  /* Allow long lesson text to wrap onto multiple lines */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .typing-character {
