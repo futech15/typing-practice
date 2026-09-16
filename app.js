@@ -323,18 +323,35 @@ function saveLessonResult(result) {
 
 function updateOverallStats() {
   const results = getSavedResults();
-  if (overallLessons) overallLessons.textContent = `${results.length}/${lessons.length}`;
 
-  if (results.length === 0) {
+  // Count only results belonging to the currently loaded lessons
+  const validResults = results.filter(result =>
+    lessons.some(lesson => lesson.id === result.lessonId)
+  );
+
+  if (overallLessons) {
+    overallLessons.textContent = `${validResults.length}/${lessons.length}`;
+  }
+
+  if (validResults.length === 0) {
     if (overallWpm) overallWpm.textContent = "0";
     if (overallAccuracy) overallAccuracy.textContent = "0%";
     if (overallTime) overallTime.textContent = "0 sec";
     return;
   }
 
-  const averageWpm = Math.round(results.reduce((sum, res) => sum + res.wpm, 0) / results.length);
-  const averageAccuracy = Math.round(results.reduce((sum, res) => sum + res.accuracy, 0) / results.length);
-  const totalTime = results.reduce((sum, res) => sum + res.time, 0);
+  const averageWpm = Math.round(
+    validResults.reduce((sum, res) => sum + res.wpm, 0) / validResults.length
+  );
+
+  const averageAccuracy = Math.round(
+    validResults.reduce((sum, res) => sum + res.accuracy, 0) / validResults.length
+  );
+
+  const totalTime = validResults.reduce(
+    (sum, res) => sum + res.time,
+    0
+  );
 
   if (overallWpm) overallWpm.textContent = averageWpm;
   if (overallAccuracy) overallAccuracy.textContent = `${averageAccuracy}%`;
