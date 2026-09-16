@@ -651,3 +651,68 @@ width: 100%;
 .typing-character.current {
   border-bottom: 2px solid #2563eb;
 }
+/* Force Lesson Options to Display in a Grid */
+.lesson-selector-section {
+  display: block !important;
+  width: 100% !important;
+  margin-bottom: 2rem !important;
+}
+
+.lesson-cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 1rem !important;
+  margin-top: 1rem !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Style the buttons cleanly */
+.lesson-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  background: #ffffff !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  padding: 1.25rem !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.lesson-card:hover {
+  border-color: #2563eb !important;
+  background-color: #f8fafc !important;
+}
+
+.lesson-card.selected {
+  border-color: #2563eb !important;
+  background-color: #eff6ff !important;
+  box-shadow: 0 0 0 2px #2563eb !important;
+}
+
+.lesson-card.completed {
+  opacity: 0.6 !important;
+  background-color: #f1f5f9 !important;
+}
+
+.lesson-card-number {
+  font-weight: bold !important;
+  color: #2563eb !important;
+  font-size: 0.9rem !important;
+}
+
+.lesson-card-title {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0.25rem 0 !important;
+}
+
+.lesson-card-description {
+  font-size: 0.85rem !important;
+  color: #64748b !important;
+}
