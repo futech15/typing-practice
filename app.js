@@ -123,6 +123,11 @@ function startLesson() {
   startTime = Date.now();
   mistypedIndices.clear();
 
+  // Reset character counts for a fresh attempt
+  typedCharacters = 0;
+  correctCharacters = 0;
+  incorrectCharacters = 0;
+
   if (startButton) startButton.disabled = true;
   if (typingInput) {
     typingInput.disabled = false;
@@ -183,15 +188,13 @@ function handleTyping(event) {
   const value = event.target.value;
   const characters = lessonText.querySelectorAll(".typing-character");
 
-  typedCharacters = value.length;
-  correctCharacters = 0;
-  incorrectCharacters = 0;
-
   // Update progress bar percentage
   if (progressBar && selectedLesson) {
     const progressPercent = Math.min((value.length / selectedLesson.text.length) * 100, 100);
     progressBar.style.width = `${progressPercent}%`;
   }
+
+  let currentCorrectCount = 0;
 
   characters.forEach((character, index) => {
     character.classList.remove("correct", "incorrect", "corrected", "current");
@@ -203,16 +206,19 @@ function handleTyping(event) {
         } else {
           character.classList.add("correct");   // Green: correct on first attempt
         }
-        correctCharacters++;
+        currentCorrectCount++;
       } else {
         character.classList.add("incorrect");    // Red: currently wrong
-        mistypedIndices.add(index);
-        incorrectCharacters++;
+        mistypedIndices.add(index);             // Permanently record error
       }
     } else if (index === value.length) {
       character.classList.add("current");
     }
   });
+
+  // Mistakes total every position ever typed wrong
+  incorrectCharacters = mistypedIndices.size;
+  correctCharacters = currentCorrectCount;
 
   updateLiveStats();
 
@@ -233,13 +239,16 @@ function updateLiveStats() {
 
   const elapsedSeconds = Math.max((Date.now() - startTime) / 1000, 1);
   const minutes = elapsedSeconds / 60;
-  const wordsTyped = typedCharacters / 5;
+  
+  const currentInputLength = typingInput ? typingInput.value.length : 0;
+  const wordsTyped = currentInputLength / 5;
   const wpm = Math.round(wordsTyped / minutes);
 
-  const accuracy =
-    typedCharacters > 0
-      ? Math.round((correctCharacters / typedCharacters) * 100)
-      : 100;
+  // Total attempts includes typed length plus all mistakes made
+  const totalAttempts = currentInputLength + incorrectCharacters;
+  const accuracy = totalAttempts > 0 
+    ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
+    : 100;
 
   if (timerDisplay) timerDisplay.textContent = Math.floor(elapsedSeconds);
   if (wpmDisplay) wpmDisplay.textContent = wpm;
