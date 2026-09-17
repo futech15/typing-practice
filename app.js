@@ -442,3 +442,15 @@ function clearAllResults() {
   updateOverallStats();
   renderCompletedLessonsList();
 }
+// Modal UI Handlers
+function openLessonModal(index) {
+  loadLesson(index); // Loads lesson content
+  const modal = document.getElementById("typingModal");
+  if (modal) modal.classList.add("active");
+}
+
+function closeLessonModal() {
+  const modal = document.getElementById("typingModal");
+  if (modal) modal.classList.remove("active");
+  resetLesson(); // Stops active timer and resets state
+}
