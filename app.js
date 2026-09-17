@@ -1,11 +1,12 @@
-// Safely gather all 4 lesson definitions
+// Safely gather lesson definitions
 const rawLessons = [
   typeof lesson1 !== "undefined" ? lesson1 : null,
   typeof lesson2 !== "undefined" ? lesson2 : null,
   typeof lesson3 !== "undefined" ? lesson3 : null,
   typeof lesson4 !== "undefined" ? lesson4 : null,
   typeof lesson5 !== "undefined" ? lesson5 : null,
-  typeof lesson6 !== "undefined" ? lesson6 : null
+  typeof lesson6 !== "undefined" ? lesson6 : null,
+  typeof lesson7 !== "undefined" ? lesson7 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
@@ -16,28 +17,51 @@ let selectedLessonIndex = 0;
 let isRunning = false;
 let startTime = null;
 let timerInterval = null;
-let isJKeyHeld = false;
+
+// Universal Key-Hold State
+let activeHoldKey = null;
+let isHoldKeyPressed = false;
 
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
+// Universal Keyboard Event Listeners for Held Keys
 window.addEventListener("keydown", (event) => {
-  if (event.key.toLowerCase() === "j") {
-    isJKeyHeld = true;
-
-    if (selectedLesson && selectedLesson.id === 6) {
-      if (document.activeElement === typingInput && typingInput.value.length === 0) {
-        event.preventDefault();
-      }
-    }
+  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
+    isHoldKeyPressed = true;
+    checkHoldKeyRequirement();
   }
 });
 
 window.addEventListener("keyup", (event) => {
-  if (event.key.toLowerCase() === "j") {
-    isJKeyHeld = false;
+  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
+    isHoldKeyPressed = false;
+    checkHoldKeyRequirement();
   }
 });
+
+// Gatekeeper function for required key holds
+function checkHoldKeyRequirement() {
+  const warningModal = document.getElementById("holdKeyWarningModal");
+  const typingInput = document.getElementById("typingInput");
+
+  if (!activeHoldKey || !isRunning) {
+    if (warningModal) warningModal.style.display = "none";
+    if (typingInput && isRunning) typingInput.disabled = false;
+    return;
+  }
+
+  if (isHoldKeyPressed) {
+    if (warningModal) warningModal.style.display = "none";
+    if (typingInput) {
+      typingInput.disabled = false;
+      typingInput.focus();
+    }
+  } else {
+    if (warningModal) warningModal.style.display = "flex";
+    if (typingInput) typingInput.disabled = true;
+  }
+}
 
 // DOM Element References
 const lessonCards = document.getElementById("lessonCards");
@@ -124,7 +148,6 @@ function renderLessonCards() {
       <div class="lesson-card-description">${lesson.description}</div>
     `;
 
-    // CHANGE THIS LINE: Call openLessonModal(index) instead of loadLesson(index)
     card.addEventListener("click", () => openLessonModal(index));
     lessonCards.appendChild(card);
   });
@@ -137,6 +160,21 @@ function loadLesson(index) {
   selectedLesson = lessons[selectedLessonIndex];
 
   if (!selectedLesson) return;
+
+  // Set universal hold key from lesson configuration
+  activeHoldKey = selectedLesson.requiredHoldKey ? selectedLesson.requiredHoldKey.toLowerCase() : null;
+  isHoldKeyPressed = false;
+
+  // Update dynamic warning modal text
+  if (activeHoldKey) {
+    const reqName = document.getElementById("requiredKeyName");
+    const reqDisplay = document.getElementById("requiredKeyDisplay");
+    const reqHand = document.getElementById("requiredHand");
+
+    if (reqName) reqName.textContent = activeHoldKey.toUpperCase();
+    if (reqDisplay) reqDisplay.textContent = activeHoldKey.toUpperCase();
+    if (reqHand) reqHand.textContent = selectedLesson.requiredHand || "opposite";
+  }
 
   if (lessonTitle) lessonTitle.textContent = selectedLesson.title;
   if (lessonDescription) lessonDescription.textContent = selectedLesson.description;
@@ -160,19 +198,16 @@ function startLesson() {
   startTime = Date.now();
   mistypedIndices.clear();
 
-  // Reset character counts for a fresh attempt
   typedCharacters = 0;
   correctCharacters = 0;
   incorrectCharacters = 0;
 
   if (startButton) startButton.disabled = true;
-  if (typingInput) {
-    typingInput.disabled = false;
-    typingInput.value = "";
-    typingInput.focus();
-  }
 
   timerInterval = setInterval(updateTimer, 1000);
+
+  // Trigger hold key gatekeeper upon starting
+  checkHoldKeyRequirement();
 }
 
 function resetLesson() {
@@ -180,6 +215,7 @@ function resetLesson() {
 
   isRunning = false;
   startTime = null;
+  isHoldKeyPressed = false;
   mistypedIndices.clear();
 
   typedCharacters = 0;
@@ -201,6 +237,7 @@ function resetLesson() {
   if (accuracyDisplay) accuracyDisplay.textContent = "100%";
   if (errorDisplay) errorDisplay.textContent = "0";
 
+  checkHoldKeyRequirement();
   renderLessonText();
 }
 
@@ -221,17 +258,10 @@ function renderLessonText() {
 
 function handleTyping(event) {
   if (!isRunning) return;
-// ONLY applies to Lesson 6: prevents typing unless J is held down
-  if (selectedLesson && selectedLesson.id === 6 && !isJKeyHeld) {
-    event.target.value = event.target.value.slice(0, -1);
-    return;
-  }
 
-  
   const value = event.target.value;
   const characters = lessonText.querySelectorAll(".typing-character");
 
-  // Update progress bar percentage
   if (progressBar && selectedLesson) {
     const progressPercent = Math.min((value.length / selectedLesson.text.length) * 100, 100);
     progressBar.style.width = `${progressPercent}%`;
@@ -245,21 +275,20 @@ function handleTyping(event) {
     if (index < value.length) {
       if (value[index] === selectedLesson.text[index]) {
         if (mistypedIndices.has(index)) {
-          character.classList.add("corrected"); // Yellow: fixed error
+          character.classList.add("corrected");
         } else {
-          character.classList.add("correct");   // Green: correct on first attempt
+          character.classList.add("correct");
         }
         currentCorrectCount++;
       } else {
-        character.classList.add("incorrect");    // Red: currently wrong
-        mistypedIndices.add(index);             // Permanently record error
+        character.classList.add("incorrect");
+        mistypedIndices.add(index);
       }
     } else if (index === value.length) {
       character.classList.add("current");
     }
   });
 
-  // Mistakes total every position ever typed wrong
   incorrectCharacters = mistypedIndices.size;
   correctCharacters = currentCorrectCount;
 
@@ -287,7 +316,6 @@ function updateLiveStats() {
   const wordsTyped = currentInputLength / 5;
   const wpm = Math.round(wordsTyped / minutes);
 
-  // Total attempts includes typed length plus all mistakes made
   const totalAttempts = currentInputLength + incorrectCharacters;
   const accuracy = totalAttempts > 0 
     ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
@@ -315,13 +343,11 @@ function finishLesson() {
   const wordsTyped = currentInputLength / 5;
   const wpm = Math.round(wordsTyped / minutes);
 
-  // Total attempts includes characters typed plus total unique mistakes made
   const totalAttempts = currentInputLength + incorrectCharacters;
   const accuracy = totalAttempts > 0 
     ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
     : 100;
 
-  // Update Lesson Result Display Elements
   if (resultWpm) resultWpm.textContent = wpm;
   if (resultAccuracy) resultAccuracy.textContent = `${accuracy}%`;
   if (resultErrors) resultErrors.textContent = incorrectCharacters;
@@ -351,6 +377,7 @@ function finishLesson() {
 
   updateOverallStats();
   renderCompletedLessonsList();
+  checkHoldKeyRequirement();
 }
 
 function goToNextLesson() {
@@ -384,7 +411,6 @@ function saveLessonResult(result) {
 function updateOverallStats() {
   const results = getSavedResults();
 
-  // Count only results belonging to the currently loaded lessons
   const validResults = results.filter(result =>
     lessons.some(lesson => lesson.id === result.lessonId)
   );
@@ -400,12 +426,10 @@ function updateOverallStats() {
     return;
   }
 
-  // Calculate true average WPM across all completed lesson attempts
   const averageWpm = Math.round(
     validResults.reduce((sum, res) => sum + Number(res.wpm || 0), 0) / validResults.length
   );
 
-  // Calculate true average Accuracy across all completed lesson attempts
   const averageAccuracy = Math.round(
     validResults.reduce((sum, res) => sum + Number(res.accuracy || 0), 0) / validResults.length
   );
@@ -424,7 +448,6 @@ function renderCompletedLessonsList() {
   const results = getSavedResults();
   const completedLessonIds = results.map((result) => result.lessonId);
   
-  // Lighten completed cards in selector
   const cards = document.querySelectorAll("#lessonCards .lesson-card");
   cards.forEach((card, index) => {
     const lesson = lessons[index];
@@ -433,7 +456,6 @@ function renderCompletedLessonsList() {
     }
   });
 
-  // Render bottom summary table
   if (!completedLessonsContainer) return;
 
   if (results.length === 0) {
@@ -459,9 +481,9 @@ function clearAllResults() {
   updateOverallStats();
   renderCompletedLessonsList();
 }
-// Modal UI Handlers
+
 function openLessonModal(index) {
-  loadLesson(index); // Loads lesson content
+  loadLesson(index);
   const modal = document.getElementById("typingModal");
   if (modal) modal.classList.add("active");
 }
@@ -469,18 +491,16 @@ function openLessonModal(index) {
 function closeLessonModal() {
   const modal = document.getElementById("typingModal");
   if (modal) modal.classList.remove("active");
-  resetLesson(); // Stops active timer and resets state
+  resetLesson();
 }
-// Highlight the key the student is supposed to type next
+
 function highlightNextKey(expectedChar) {
-  // Clear previous highlights
   document.querySelectorAll('.virtual-keyboard .key').forEach(key => {
     key.classList.remove('next-key');
   });
 
   if (!expectedChar) return;
 
-  // Handle spaces vs character keys
   let targetKey = expectedChar.toLowerCase();
   let keyElement;
 
@@ -495,7 +515,6 @@ function highlightNextKey(expectedChar) {
   }
 }
 
-// Visual active state when a key is physically pressed down
 function handleKeyPressEffect(event) {
   const pressedKey = event.key.toLowerCase();
   const keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${pressedKey}"]`);
@@ -508,13 +527,11 @@ function handleKeyPressEffect(event) {
   }
 }
 
-// Attach listener for physical key presses
 document.addEventListener('keydown', handleKeyPressEffect);
 
 let isCapsLock = false;
 let isShiftPressed = false;
 
-// Update key labels dynamically depending on Shift or Caps Lock
 function updateKeyboardCase() {
   const isUppercase = (isCapsLock && !isShiftPressed) || (!isCapsLock && isShiftPressed);
 
@@ -524,40 +541,32 @@ function updateKeyboardCase() {
 
     if (!baseKey) return;
 
-    // Standard letters
     if (baseKey.length === 1 && baseKey.match(/[a-z]/i)) {
       keyEl.textContent = isUppercase ? baseKey.toUpperCase() : baseKey.toLowerCase();
-    } 
-    // Number and symbol keys with shift states
-    else if (shiftKey) {
+    } else if (shiftKey) {
       keyEl.textContent = isShiftPressed ? shiftKey : baseKey;
     }
   });
 }
 
-// Highlight key blue on press and handle case toggles
 window.addEventListener("keydown", (e) => {
   const keyName = e.key.toLowerCase();
 
-  // Track Caps Lock state
   if (e.key === "CapsLock") {
     isCapsLock = e.getModifierState("CapsLock");
     updateKeyboardCase();
   }
 
-  // Track Shift state
   if (e.key === "Shift") {
     isShiftPressed = true;
     updateKeyboardCase();
   }
 
-  // Find matching key element and highlight blue
   document.querySelectorAll(`.key[data-key="${keyName}"]`).forEach((keyEl) => {
     keyEl.classList.add("active");
   });
 });
 
-// Remove blue highlight on key release
 window.addEventListener("keyup", (e) => {
   const keyName = e.key.toLowerCase();
 
