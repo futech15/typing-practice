@@ -24,6 +24,12 @@ let mistypedIndices = new Set();
 window.addEventListener("keydown", (event) => {
   if (event.key.toLowerCase() === "j") {
     isJKeyHeld = true;
+
+    if (selectedLesson && selectedLesson.id === 6) {
+      if (document.activeElement === typingInput && typingInput.value.length === 0) {
+        event.preventDefault();
+      }
+    }
   }
 });
 
