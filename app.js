@@ -16,9 +16,22 @@ let selectedLessonIndex = 0;
 let isRunning = false;
 let startTime = null;
 let timerInterval = null;
+let isJKeyHeld = false;
 
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
+
+window.addEventListener("keydown", (event) => {
+  if (event.key.toLowerCase() === "j") {
+    isJKeyHeld = true;
+  }
+});
+
+window.addEventListener("keyup", (event) => {
+  if (event.key.toLowerCase() === "j") {
+    isJKeyHeld = false;
+  }
+});
 
 // DOM Element References
 const lessonCards = document.getElementById("lessonCards");
@@ -185,7 +198,13 @@ function renderLessonText() {
 
 function handleTyping(event) {
   if (!isRunning) return;
+// ONLY applies to Lesson 6: prevents typing unless J is held down
+  if (selectedLesson && selectedLesson.id === 6 && !isJKeyHeld) {
+    event.target.value = event.target.value.slice(0, -1);
+    return;
+  }
 
+  
   const value = event.target.value;
   const characters = lessonText.querySelectorAll(".typing-character");
 
