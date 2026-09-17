@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing Practice</title>
+  <title>TypeLab - Typing Practice</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,10 +12,9 @@
 
     <header class="app-header">
       <div>
-        <h1>Typing Practice</h1>
+        <h1>TypeLab</h1>
         <p class="subtitle">Improve your typing speed and accuracy</p>
-        <p class="subtitle">© 2026 HSA Cleveland· @Mr. Rabar</p>
-
+        <p class="subtitle">© 2026 HSA Cleveland · @Mr. Rabar</p>
       </div>
 
       <div class="overall-stats">
@@ -45,200 +44,173 @@
 
     <main>
 
-   <!-- Lesson Selection -->
-<section class="lesson-selector-section">
-  <div class="section-header">
-    <h2>Choose a Lesson</h2>
-    <p class="section-description">
-      Select a lesson to begin practicing. Completed lessons appear lighter.
-    </p>
-  </div>
-
-  <div id="lessonCards" class="lesson-cards">
-    <button type="button" class="lesson-card selected" onclick="loadLesson(0)">
-      <div class="lesson-card-number">Lesson 1</div>
-      <div class="lesson-card-title">Lesson 1: F, G, H, and J</div>
-      <div class="lesson-card-description">Practice using the four home-row keys: F, G, H, and J.</div>
-    </button>
-
-    <button type="button" class="lesson-card" onclick="loadLesson(1)">
-      <div class="lesson-card-number">Lesson 2</div>
-      <div class="lesson-card-title">Lesson 2: D, K, S, and L</div>
-      <div class="lesson-card-description">Expand your home-row reach with D, K, S, and L.</div>
-    </button>
-
-    <button type="button" class="lesson-card" onclick="loadLesson(2)">
-      <div class="lesson-card-number">Lesson 3</div>
-      <div class="lesson-card-title">Lesson 3: A and Semi-colon (;)</div>
-      <div class="lesson-card-description">Master the outer home-row keys: A and ;.</div>
-    </button>
-
-    <button type="button" class="lesson-card" onclick="loadLesson(3)">
-      <div class="lesson-card-number">Lesson 4</div>
-      <div class="lesson-card-title">Lesson 4: Full Home Row</div>
-      <div class="lesson-card-description">Combine all home-row keys together.</div>
-    </button>
-  </div>
-</section>
-
-      <!-- Current Lesson -->
-      <section class="lesson-card">
-
-        <div class="lesson-heading">
-          <div>
-            <h2 id="lessonTitle">Lesson 1</h2>
-            <p id="lessonDescription"></p>
-          </div>
-
-          <div class="lesson-number" id="lessonNumber">1</div>
+      <!-- Lesson Selection -->
+      <section class="lesson-selector-section">
+        <div class="section-header">
+          <h2>Choose a Lesson</h2>
+          <p class="section-description">
+            Select a lesson to open the typing screen and begin practicing.
+          </p>
         </div>
 
-        <!-- Text students must type -->
-        <div class="text-display" id="lessonText"></div>
-
-        <!-- Typing area -->
-        <textarea
-          id="typingInput"
-          placeholder="Click Start Lesson, then type the text above..."
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          disabled
-        ></textarea>
-
-        <!-- Progress -->
-        <div class="progress-container">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-
-
-        <!-- Buttons -->
-        <div class="button-row">
-
-          <button id="startButton" class="primary-button">
-            Start Lesson
+        <div id="lessonCards" class="lesson-cards">
+          <button type="button" class="lesson-card" onclick="openLessonModal(0)">
+            <div class="lesson-card-number">Lesson 1</div>
+            <div class="lesson-card-title">Lesson 1: F, G, H, and J</div>
+            <div class="lesson-card-description">Practice using the four home-row keys: F, G, H, and J.</div>
           </button>
 
-          <button id="resetButton" class="secondary-button">
-            Reset
+          <button type="button" class="lesson-card" onclick="openLessonModal(1)">
+            <div class="lesson-card-number">Lesson 2</div>
+            <div class="lesson-card-title">Lesson 2: D, K, S, and L</div>
+            <div class="lesson-card-description">Expand your home-row reach with D, K, S, and L.</div>
           </button>
 
-          <button
-            id="nextButton"
-            class="secondary-button"
-            style="display: none;"
-          >
-            Next Lesson
+          <button type="button" class="lesson-card" onclick="openLessonModal(2)">
+            <div class="lesson-card-number">Lesson 3</div>
+            <div class="lesson-card-title">Lesson 3: A and Semi-colon (;)</div>
+            <div class="lesson-card-description">Master the outer home-row keys: A and ;.</div>
           </button>
 
+          <button type="button" class="lesson-card" onclick="openLessonModal(3)">
+            <div class="lesson-card-number">Lesson 4</div>
+            <div class="lesson-card-title">Lesson 4: Full Home Row</div>
+            <div class="lesson-card-description">Combine all home-row keys together.</div>
+          </button>
+
+          <button type="button" class="lesson-card" onclick="openLessonModal(4)">
+            <div class="lesson-card-number">Lesson 5</div>
+            <div class="lesson-card-title">Lesson 5: Easy Sentences</div>
+            <div class="lesson-card-description">Practice complete short sentences.</div>
+          </button>
+
+          <button type="button" class="lesson-card" onclick="openLessonModal(5)">
+            <div class="lesson-card-number">Lesson 6</div>
+            <div class="lesson-card-title">Lesson 6: J Key Control</div>
+            <div class="lesson-card-description">Hold the J key while typing left-hand letters.</div>
+          </button>
         </div>
-      
-        <!-- Live Statistics -->
-        <div class="live-stats">
-
-          <div class="stat-box">
-            <span>WPM</span>
-            <strong id="wpm">0</strong>
-          </div>
-
-          <div class="stat-box">
-            <span>Accuracy</span>
-            <strong id="accuracy">100%</strong>
-          </div>
-
-          <div class="stat-box">
-            <span>Time</span>
-            <strong id="timer">0</strong>
-          </div>
-
-          <div class="stat-box">
-            <span>Errors</span>
-            <strong id="errors">0</strong>
-          </div>
-
-        </div>
-        
-        <!-- Lesson Result -->
-        <div
-          class="lesson-result"
-          id="resultsSection"
-          style="display: none;"
-        >
-
-          <h3>Lesson Result</h3>
-
-          <div class="result-grid">
-
-            <div>
-              <span>WPM</span>
-              <strong id="resultWpm">0</strong>
-            </div>
-
-            <div>
-              <span>Accuracy</span>
-              <strong id="resultAccuracy">0%</strong>
-            </div>
-
-            <div>
-              <span>Errors</span>
-              <strong id="resultErrors">0</strong>
-            </div>
-
-            <div>
-              <span>Time</span>
-              <strong id="resultTime">0 sec</strong>
-            </div>
-
-          </div>
-
-          <p id="resultMessage"></p>
-
-        </div>
-
       </section>
 
       <!-- Completed Lessons List -->
       <section class="completed-lessons-section">
-
         <div class="section-heading">
           <h2>Completed Lessons</h2>
-
-          <button
-            id="clearResultsButton"
-            class="clear-button"
-          >
+          <button id="clearResultsButton" class="clear-button">
             Clear All Results
           </button>
         </div>
 
         <div id="completedLessons">
-          <p class="empty-message">
-            No lessons completed yet.
-          </p>
+          <p class="empty-message">No lessons completed yet.</p>
         </div>
-
       </section>
 
     </main>
 
     <footer>
-      Typing Practice App
+      TypeLab - Typing Practice App
     </footer>
 
   </div>
 
-<!-- Lesson Files -->
-<script src="lessons/lesson1.js"></script>
-<script src="lessons/lesson2.js"></script>
-<script src="lessons/lesson3.js"></script>
-<script src="lessons/lesson4.js"></script>
-<script src="lessons/lesson5.js"></script>
-<script src="lessons/lesson6.js"></script>
+  <!-- FULL-SCREEN TYPING POPUP MODAL -->
+  <div id="typingModal" class="modal-overlay">
+    <div class="modal-content">
+      
+      <button class="modal-close-btn" onclick="closeLessonModal()">&times;</button>
 
-<!-- Main Application Script -->
-<script src="app.js"></script>
+      <div class="lesson-heading">
+        <div>
+          <h2 id="lessonTitle">Lesson 1</h2>
+          <p id="lessonDescription"></p>
+        </div>
+        <div class="lesson-number" id="lessonNumber">1</div>
+      </div>
+
+      <!-- Text students must type -->
+      <div class="text-display" id="lessonText"></div>
+
+      <!-- Typing area -->
+      <textarea
+        id="typingInput"
+        placeholder="Click Start Lesson, then type the text above..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        disabled
+      ></textarea>
+
+      <!-- Progress -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-row">
+        <button id="startButton" class="primary-button">Start Lesson</button>
+        <button id="resetButton" class="secondary-button">Reset</button>
+        <button id="nextButton" class="secondary-button" style="display: none;">Next Lesson</button>
+      </div>
+
+      <!-- Live Statistics -->
+      <div class="live-stats">
+        <div class="stat-box">
+          <span>WPM</span>
+          <strong id="wpm">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Accuracy</span>
+          <strong id="accuracy">100%</strong>
+        </div>
+        <div class="stat-box">
+          <span>Time</span>
+          <strong id="timer">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Errors</span>
+          <strong id="errors">0</strong>
+        </div>
+      </div>
+
+      <!-- Lesson Result -->
+      <div class="lesson-result" id="resultsSection" style="display: none;">
+        <h3>Lesson Result</h3>
+        <div class="result-grid">
+          <div>
+            <span>WPM</span>
+            <strong id="resultWpm">0</strong>
+          </div>
+          <div>
+            <span>Accuracy</span>
+            <strong id="resultAccuracy">0%</strong>
+          </div>
+          <div>
+            <span>Errors</span>
+            <strong id="resultErrors">0</strong>
+          </div>
+          <div>
+            <span>Time</span>
+            <strong id="resultTime">0 sec</strong>
+          </div>
+        </div>
+        <p id="resultMessage"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lesson Files -->
+  <script src="lessons/lesson1.js"></script>
+  <script src="lessons/lesson2.js"></script>
+  <script src="lessons/lesson3.js"></script>
+  <script src="lessons/lesson4.js"></script>
+  <script src="lessons/lesson5.js"></script>
+  <script src="lessons/lesson6.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
 
 </body>
 </html>
