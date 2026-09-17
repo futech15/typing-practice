@@ -90,6 +90,22 @@ function initializeApp() {
   if (nextButton) nextButton.onclick = goToNextLesson;
   if (clearResultsButton) clearResultsButton.onclick = clearAllResults;
   if (typingInput) typingInput.oninput = handleTyping;
+
+  // Modal close triggers
+  const closeBtn = document.getElementById("closeModalBtn");
+  const modalOverlay = document.getElementById("typingModal");
+
+  if (closeBtn) closeBtn.onclick = closeLessonModal;
+
+  if (modalOverlay) {
+    modalOverlay.onclick = (e) => {
+      if (e.target === modalOverlay) closeLessonModal();
+    };
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLessonModal();
+  });
 }
 
 function renderLessonCards() {
@@ -108,7 +124,8 @@ function renderLessonCards() {
       <div class="lesson-card-description">${lesson.description}</div>
     `;
 
-    card.addEventListener("click", () => loadLesson(index));
+    // CHANGE THIS LINE: Call openLessonModal(index) instead of loadLesson(index)
+    card.addEventListener("click", () => openLessonModal(index));
     lessonCards.appendChild(card);
   });
 
