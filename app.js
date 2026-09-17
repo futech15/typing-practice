@@ -4,7 +4,8 @@ const rawLessons = [
   typeof lesson2 !== "undefined" ? lesson2 : null,
   typeof lesson3 !== "undefined" ? lesson3 : null,
   typeof lesson4 !== "undefined" ? lesson4 : null,
-  typeof lesson5 !== "undefined" ? lesson5 : null
+  typeof lesson5 !== "undefined" ? lesson5 : null,
+  typeof lesson6 !== "undefined" ? lesson6 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
