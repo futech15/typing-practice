@@ -25,9 +25,10 @@ let isHoldKeyPressed = false;
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
-// Universal Keyboard Event Listeners for Held Keys
+// Universal Keyboard Event Listeners for Held Keys (with event.preventDefault to block repeated key inputs)
 window.addEventListener("keydown", (event) => {
   if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
+    event.preventDefault(); // Prevents repeating characters (e.g., 'jjjj') from filling the input box
     isHoldKeyPressed = true;
     checkHoldKeyRequirement();
   }
@@ -55,7 +56,9 @@ function checkHoldKeyRequirement() {
     if (warningModal) warningModal.style.display = "none";
     if (typingInput) {
       typingInput.disabled = false;
-      typingInput.focus();
+      if (document.activeElement !== typingInput) {
+        typingInput.focus();
+      }
     }
   } else {
     if (warningModal) warningModal.style.display = "flex";
