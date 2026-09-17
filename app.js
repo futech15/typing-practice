@@ -471,3 +471,42 @@ function closeLessonModal() {
   if (modal) modal.classList.remove("active");
   resetLesson(); // Stops active timer and resets state
 }
+// Highlight the key the student is supposed to type next
+function highlightNextKey(expectedChar) {
+  // Clear previous highlights
+  document.querySelectorAll('.virtual-keyboard .key').forEach(key => {
+    key.classList.remove('next-key');
+  });
+
+  if (!expectedChar) return;
+
+  // Handle spaces vs character keys
+  let targetKey = expectedChar.toLowerCase();
+  let keyElement;
+
+  if (targetKey === ' ') {
+    keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]');
+  } else {
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${targetKey}"]`);
+  }
+
+  if (keyElement) {
+    keyElement.classList.add('next-key');
+  }
+}
+
+// Visual active state when a key is physically pressed down
+function handleKeyPressEffect(event) {
+  const pressedKey = event.key.toLowerCase();
+  const keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${pressedKey}"]`);
+
+  if (keyElement) {
+    keyElement.classList.add('active');
+    setTimeout(() => {
+      keyElement.classList.remove('active');
+    }, 150);
+  }
+}
+
+// Attach listener for physical key presses
+document.addEventListener('keydown', handleKeyPressEffect);
