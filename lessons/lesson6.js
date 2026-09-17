@@ -1,6 +1,6 @@
 var lesson6 = {
   id: 6,
-  title: "Lesson 6: J Key Control",
-  description: "Hold the J key while typing the lesson text.",
-  text: "we are ready\nwe see a great day\nthe red fox ran fast\nfred had a safe start\nhe was glad to see the sun\nthe team had a great day"
+  title: "Lesson 6",
+  description: "Hold the J key with your right hand while typing with your left hand.",
+  text: "we see a red cat. fred had a safe start. a fast car fled. we ate a sweet treat. red star falls."
 };
