@@ -789,3 +789,57 @@ width: 100%;
 .modal-close-btn:hover {
   color: #0f172a;
 }
+/* 1. Visually hide the input while keeping it active for keystrokes */
+#typingInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  width: 0;
+}
+
+/* 2. Virtual Keyboard Layout & Active Blue Key Highlight */
+.virtual-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 25px;
+  padding: 15px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+
+.key {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #334155;
+  font-size: 14px;
+  transition: all 0.1s ease;
+}
+
+.key-space {
+  width: 240px;
+}
+
+/* Turns target key blue */
+.key.active-target {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+  transform: scale(1.05);
+}
