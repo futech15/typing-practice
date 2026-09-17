@@ -114,9 +114,18 @@
 
   </div>
 
-  <!-- FULL-SCREEN TYPING POPUP MODAL -->
+<!-- FULL-SCREEN TYPING POPUP MODAL -->
   <div id="typingModal" class="modal-overlay">
     <div class="modal-content">
+
+     <!-- Universal Key Hold Warning Overlay -->
+<div id="holdKeyWarningModal" class="j-warning-overlay" style="display: none;">
+  <div class="j-warning-content">
+    <div class="j-warning-icon">⚠️</div>
+    <h2>Hold the '<span id="requiredKeyName">J</span>' Key!</h2>
+    <p>Hold the <strong><span id="requiredKeyDisplay">J</span></strong> key with your <span id="requiredHand">right</span> hand while typing.</p>
+  </div>
+</div>
       
       <button class="modal-close-btn" onclick="closeLessonModal()">&times;</button>
 
