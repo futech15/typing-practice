@@ -843,3 +843,49 @@ width: 100%;
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
   transform: scale(1.05);
 }
+/* Virtual Keyboard Container */
+.virtual-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 15px 0;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 6px;
+}
+
+.key {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background-color: #f9f9f9;
+  color: #333;
+  user-select: none;
+  transition: background-color 0.1s, transform 0.05s;
+}
+
+.key-space {
+  width: 200px;
+}
+
+/* Highlight for the next key to type */
+.key.next-key {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+}
+
+/* Effect when physical key is pressed */
+.key.active {
+  transform: scale(0.92);
+  background-color: #e0e0e0;
+}
