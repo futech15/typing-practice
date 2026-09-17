@@ -510,3 +510,63 @@ function handleKeyPressEffect(event) {
 
 // Attach listener for physical key presses
 document.addEventListener('keydown', handleKeyPressEffect);
+
+let isCapsLock = false;
+let isShiftPressed = false;
+
+// Update key labels dynamically depending on Shift or Caps Lock
+function updateKeyboardCase() {
+  const isUppercase = (isCapsLock && !isShiftPressed) || (!isCapsLock && isShiftPressed);
+
+  document.querySelectorAll(".virtual-keyboard .key").forEach((keyEl) => {
+    const baseKey = keyEl.dataset.key;
+    const shiftKey = keyEl.dataset.shift;
+
+    if (!baseKey) return;
+
+    // Standard letters
+    if (baseKey.length === 1 && baseKey.match(/[a-z]/i)) {
+      keyEl.textContent = isUppercase ? baseKey.toUpperCase() : baseKey.toLowerCase();
+    } 
+    // Number and symbol keys with shift states
+    else if (shiftKey) {
+      keyEl.textContent = isShiftPressed ? shiftKey : baseKey;
+    }
+  });
+}
+
+// Highlight key blue on press and handle case toggles
+window.addEventListener("keydown", (e) => {
+  const keyName = e.key.toLowerCase();
+
+  // Track Caps Lock state
+  if (e.key === "CapsLock") {
+    isCapsLock = e.getModifierState("CapsLock");
+    updateKeyboardCase();
+  }
+
+  // Track Shift state
+  if (e.key === "Shift") {
+    isShiftPressed = true;
+    updateKeyboardCase();
+  }
+
+  // Find matching key element and highlight blue
+  document.querySelectorAll(`.key[data-key="${keyName}"]`).forEach((keyEl) => {
+    keyEl.classList.add("active");
+  });
+});
+
+// Remove blue highlight on key release
+window.addEventListener("keyup", (e) => {
+  const keyName = e.key.toLowerCase();
+
+  if (e.key === "Shift") {
+    isShiftPressed = false;
+    updateKeyboardCase();
+  }
+
+  document.querySelectorAll(`.key[data-key="${keyName}"]`).forEach((keyEl) => {
+    keyEl.classList.remove("active");
+  });
+});
