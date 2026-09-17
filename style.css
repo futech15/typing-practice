@@ -736,3 +736,6 @@ width: 100%;
   font-size: 0.85rem !important;
   color: #64748b !important;
 }
+.typing-container, #lessonText {
+  white-space: pre-wrap;
+}
