@@ -631,3 +631,8 @@ footer {
   display: block;
   margin-bottom: 10px;
 }
+
+.subtitle.credit {
+  font-size: 13px;
+  opacity: 0.7;
+}
