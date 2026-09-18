@@ -45,11 +45,13 @@ function checkHoldKeyRequirement() {
   const warningModal = document.getElementById("holdKeyWarningModal");
   const typingInput = document.getElementById("typingInput");
 
-  if (!activeHoldKey || !isRunning) {
+  if (!activeHoldKey) {
     if (warningModal) warningModal.style.display = "none";
     if (typingInput && isRunning) typingInput.disabled = false;
     return;
   }
+
+  if (!isRunning) return;
 
   if (isHoldKeyPressed) {
     if (warningModal) warningModal.style.display = "none";
@@ -204,6 +206,12 @@ function startLesson() {
 
   if (startButton) startButton.disabled = true;
 
+  // ENABLE TYPING INPUT
+  if (typingInput) {
+    typingInput.disabled = false;
+    typingInput.focus();
+  }
+
   timerInterval = setInterval(updateTimer, 1000);
 
   checkHoldKeyRequirement();
@@ -239,6 +247,9 @@ function resetLesson() {
   if (accuracyDisplay) accuracyDisplay.textContent = "100%";
   if (errorDisplay) errorDisplay.textContent = "0";
 
+  // CLEAR KEYBOARD HIGHLIGHTS
+  document.querySelectorAll(".key").forEach((k) => k.classList.remove("active", "next-key"));
+
   checkHoldKeyRequirement();
   renderLessonText();
   highlightNextKey(null);
@@ -273,7 +284,6 @@ function handleTyping(event) {
   let currentCorrectCount = 0;
 
   characters.forEach((character, index) => {
-    // Preserve base class while updating state
     character.classList.remove("correct", "incorrect", "corrected", "current");
 
     if (index < value.length) {
@@ -296,7 +306,6 @@ function handleTyping(event) {
   incorrectCharacters = mistypedIndices.size;
   correctCharacters = currentCorrectCount;
 
-  // Highlight next target key on keyboard
   if (value.length < selectedLesson.text.length) {
     highlightNextKey(selectedLesson.text[value.length]);
   } else {
@@ -322,7 +331,7 @@ function updateLiveStats() {
 
   const elapsedSeconds = Math.max((Date.now() - startTime) / 1000, 1);
   const minutes = elapsedSeconds / 60;
-  
+
   const currentInputLength = typingInput ? typingInput.value.length : 0;
   const wordsTyped = currentInputLength / 5;
   const wpm = Math.round(wordsTyped / minutes);
@@ -349,7 +358,7 @@ function finishLesson() {
 
   const elapsedSeconds = Math.max((Date.now() - startTime) / 1000, 1);
   const minutes = elapsedSeconds / 60;
-  
+
   const currentInputLength = typingInput ? typingInput.value.length : 0;
   const wordsTyped = currentInputLength / 5;
   const wpm = Math.round(wordsTyped / minutes);
@@ -458,7 +467,7 @@ function updateOverallStats() {
 function renderCompletedLessonsList() {
   const results = getSavedResults();
   const completedLessonIds = results.map((result) => result.lessonId);
-  
+
   const cards = document.querySelectorAll("#lessonCards .lesson-card");
   cards.forEach((card, index) => {
     const lesson = lessons[index];
@@ -506,7 +515,6 @@ function closeLessonModal() {
 }
 
 function highlightNextKey(expectedChar) {
-  // Clear all previous key highlights
   document.querySelectorAll('.virtual-keyboard .key').forEach(key => {
     key.classList.remove('next-key');
   });
@@ -520,7 +528,7 @@ function highlightNextKey(expectedChar) {
     keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
-    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${targetKey}"]`);
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`);
   }
 
   if (keyElement) {
@@ -549,7 +557,7 @@ function updateKeyboardCase() {
 }
 
 window.addEventListener("keydown", (e) => {
-  const keyName = e.key.toLowerCase();
+  const rawKey = e.key.toLowerCase();
 
   if (e.key === "CapsLock") {
     isCapsLock = e.getModifierState("CapsLock");
@@ -561,22 +569,28 @@ window.addEventListener("keydown", (e) => {
     updateKeyboardCase();
   }
 
-  const activeKey = keyName === ' ' ? 'space' : keyName;
-  document.querySelectorAll(`.key[data-key="${keyName}"], .key[data-key="${activeKey}"]`).forEach((keyEl) => {
-    keyEl.classList.add("active");
-  });
+  // Clear all key active states first to prevent sticking
+  document.querySelectorAll(".key").forEach((k) => k.classList.remove("active"));
+
+  const keyToMatch = rawKey === " " ? " " : rawKey;
+  
+  // Safe selector lookup
+  try {
+    const keys = document.querySelectorAll(`.key[data-key="${CSS.escape(keyToMatch)}"]`);
+    keys.forEach((keyEl) => keyEl.classList.add("active"));
+  } catch (err) {
+    // Fallback if key escapes fail
+  }
 });
 
 window.addEventListener("keyup", (e) => {
-  const keyName = e.key.toLowerCase();
-
   if (e.key === "Shift") {
     isShiftPressed = false;
     updateKeyboardCase();
   }
 
-  const activeKey = keyName === ' ' ? 'space' : keyName;
-  document.querySelectorAll(`.key[data-key="${keyName}"], .key[data-key="${activeKey}"]`).forEach((keyEl) => {
+  // Remove active state across all keys on keyup
+  document.querySelectorAll(".key").forEach((keyEl) => {
     keyEl.classList.remove("active");
   });
 });
