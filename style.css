@@ -623,3 +623,11 @@ footer {
     width: 100%;
   }
 }
+
+.typelab-logo {
+  width: 260px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
