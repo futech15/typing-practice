@@ -207,7 +207,7 @@ function startLesson() {
   timerInterval = setInterval(updateTimer, 1000);
 
   checkHoldKeyRequirement();
-  if (selectedLesson) {
+  if (selectedLesson && selectedLesson.text) {
     highlightNextKey(selectedLesson.text[0]);
   }
 }
@@ -273,18 +273,19 @@ function handleTyping(event) {
   let currentCorrectCount = 0;
 
   characters.forEach((character, index) => {
-    character.className = "typing-character";
+    // Preserve base class while updating state
+    character.classList.remove("correct", "incorrect", "corrected", "current");
 
     if (index < value.length) {
       if (value[index] === selectedLesson.text[index]) {
         if (mistypedIndices.has(index)) {
-          character.classList.add("corrected");
+          character.classList.add("corrected"); // Yellow
         } else {
-          character.classList.add("correct");
+          character.classList.add("correct"); // Green
         }
         currentCorrectCount++;
       } else {
-        character.classList.add("incorrect");
+        character.classList.add("incorrect"); // Red
         mistypedIndices.add(index);
       }
     } else if (index === value.length) {
@@ -295,6 +296,7 @@ function handleTyping(event) {
   incorrectCharacters = mistypedIndices.size;
   correctCharacters = currentCorrectCount;
 
+  // Highlight next target key on keyboard
   if (value.length < selectedLesson.text.length) {
     highlightNextKey(selectedLesson.text[value.length]);
   } else {
@@ -504,6 +506,7 @@ function closeLessonModal() {
 }
 
 function highlightNextKey(expectedChar) {
+  // Clear all previous key highlights
   document.querySelectorAll('.virtual-keyboard .key').forEach(key => {
     key.classList.remove('next-key');
   });
@@ -513,8 +516,9 @@ function highlightNextKey(expectedChar) {
   let targetKey = expectedChar.toLowerCase();
   let keyElement;
 
-  if (targetKey === ' ') {
-    keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]');
+  if (targetKey === ' ' || targetKey === '\u00A0') {
+    keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
+                 document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
     keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${targetKey}"]`);
   }
@@ -523,20 +527,6 @@ function highlightNextKey(expectedChar) {
     keyElement.classList.add('next-key');
   }
 }
-
-function handleKeyPressEffect(event) {
-  const pressedKey = event.key.toLowerCase();
-  const keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${pressedKey}"]`);
-
-  if (keyElement) {
-    keyElement.classList.add('active');
-    setTimeout(() => {
-      keyElement.classList.remove('active');
-    }, 150);
-  }
-}
-
-document.addEventListener('keydown', handleKeyPressEffect);
 
 let isCapsLock = false;
 let isShiftPressed = false;
@@ -571,7 +561,8 @@ window.addEventListener("keydown", (e) => {
     updateKeyboardCase();
   }
 
-  document.querySelectorAll(`.key[data-key="${keyName}"]`).forEach((keyEl) => {
+  const activeKey = keyName === ' ' ? 'space' : keyName;
+  document.querySelectorAll(`.key[data-key="${keyName}"], .key[data-key="${activeKey}"]`).forEach((keyEl) => {
     keyEl.classList.add("active");
   });
 });
@@ -584,7 +575,8 @@ window.addEventListener("keyup", (e) => {
     updateKeyboardCase();
   }
 
-  document.querySelectorAll(`.key[data-key="${keyName}"]`).forEach((keyEl) => {
+  const activeKey = keyName === ' ' ? 'space' : keyName;
+  document.querySelectorAll(`.key[data-key="${keyName}"], .key[data-key="${activeKey}"]`).forEach((keyEl) => {
     keyEl.classList.remove("active");
   });
 });
