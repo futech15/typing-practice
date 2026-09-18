@@ -1,12 +1,11 @@
-// Safely gather lesson definitions
+// Safely gather lesson definitions (Lessons 1-6)
 const rawLessons = [
   typeof lesson1 !== "undefined" ? lesson1 : null,
   typeof lesson2 !== "undefined" ? lesson2 : null,
   typeof lesson3 !== "undefined" ? lesson3 : null,
   typeof lesson4 !== "undefined" ? lesson4 : null,
   typeof lesson5 !== "undefined" ? lesson5 : null,
-  typeof lesson6 !== "undefined" ? lesson6 : null,
-  typeof lesson7 !== "undefined" ? lesson7 : null
+  typeof lesson6 !== "undefined" ? lesson6 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
@@ -25,10 +24,10 @@ let isHoldKeyPressed = false;
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
-// Universal Keyboard Event Listeners for Held Keys (with event.preventDefault to block repeated key inputs)
+// Universal Keyboard Event Listeners for Held Keys
 window.addEventListener("keydown", (event) => {
   if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
-    event.preventDefault(); // Prevents repeating characters (e.g., 'jjjj') from filling the input box
+    event.preventDefault(); // Prevents key repetition
     isHoldKeyPressed = true;
     checkHoldKeyRequirement();
   }
@@ -164,11 +163,9 @@ function loadLesson(index) {
 
   if (!selectedLesson) return;
 
-  // Set universal hold key from lesson configuration
   activeHoldKey = selectedLesson.requiredHoldKey ? selectedLesson.requiredHoldKey.toLowerCase() : null;
   isHoldKeyPressed = false;
 
-  // Update dynamic warning modal text
   if (activeHoldKey) {
     const reqName = document.getElementById("requiredKeyName");
     const reqDisplay = document.getElementById("requiredKeyDisplay");
@@ -209,8 +206,10 @@ function startLesson() {
 
   timerInterval = setInterval(updateTimer, 1000);
 
-  // Trigger hold key gatekeeper upon starting
   checkHoldKeyRequirement();
+  if (selectedLesson) {
+    highlightNextKey(selectedLesson.text[0]);
+  }
 }
 
 function resetLesson() {
@@ -242,6 +241,7 @@ function resetLesson() {
 
   checkHoldKeyRequirement();
   renderLessonText();
+  highlightNextKey(null);
 }
 
 function renderLessonText() {
@@ -273,7 +273,7 @@ function handleTyping(event) {
   let currentCorrectCount = 0;
 
   characters.forEach((character, index) => {
-    character.classList.remove("correct", "incorrect", "corrected", "current");
+    character.className = "typing-character";
 
     if (index < value.length) {
       if (value[index] === selectedLesson.text[index]) {
@@ -294,6 +294,12 @@ function handleTyping(event) {
 
   incorrectCharacters = mistypedIndices.size;
   correctCharacters = currentCorrectCount;
+
+  if (value.length < selectedLesson.text.length) {
+    highlightNextKey(selectedLesson.text[value.length]);
+  } else {
+    highlightNextKey(null);
+  }
 
   updateLiveStats();
 
