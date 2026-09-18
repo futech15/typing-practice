@@ -5,7 +5,11 @@ const rawLessons = [
   typeof lesson3 !== "undefined" ? lesson3 : null,
   typeof lesson4 !== "undefined" ? lesson4 : null,
   typeof lesson5 !== "undefined" ? lesson5 : null,
-  typeof lesson6 !== "undefined" ? lesson6 : null
+  typeof lesson6 !== "undefined" ? lesson6 : null,
+  typeof lesson7 !== "undefined" ? lesson7 : null,
+  typeof lesson8 !== "undefined" ? lesson8 : null,
+  typeof lesson9 !== "undefined" ? lesson9 : null,
+  typeof lesson10 !== "undefined" ? lesson10 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
