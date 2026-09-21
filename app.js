@@ -33,19 +33,51 @@ let isHoldKeyPressed = false;
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
-// Universal Keyboard Event Listeners for Held Keys
+// Combined Keydown Listener (Held Key Check + Visual Light Blue Highlight)
 window.addEventListener("keydown", (event) => {
+  // 1. Held Key Gatekeeper Logic
   if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
     event.preventDefault(); // Prevents key repetition
     isHoldKeyPressed = true;
     checkHoldKeyRequirement();
   }
+
+  // 2. Light Blue Highlight for Physically Pressed Key
+  const rawKey = event.key;
+  let targetKey = rawKey === " " ? " " : rawKey.toLowerCase();
+  
+  if (rawKey === "Spacebar" || rawKey === " ") targetKey = " ";
+
+  try {
+    const keys = document.querySelectorAll(
+      `.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`
+    );
+    keys.forEach((keyEl) => keyEl.classList.add("active"));
+  } catch (err) {
+    // Fallback for special key characters
+  }
 });
 
+// Combined Keyup Listener (Held Key Release + Remove Light Blue Highlight)
 window.addEventListener("keyup", (event) => {
+  // 1. Held Key Release Logic
   if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
     isHoldKeyPressed = false;
     checkHoldKeyRequirement();
+  }
+
+  // 2. Remove Light Blue Active State Across Virtual Keys
+  const rawKey = event.key;
+  let targetKey = rawKey === " " ? " " : rawKey.toLowerCase();
+
+  try {
+    const keys = document.querySelectorAll(
+      `.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`
+    );
+    keys.forEach((keyEl) => keyEl.classList.remove("active"));
+  } catch (err) {
+    // Fallback cleanup
+    document.querySelectorAll(".virtual-keyboard .key.active").forEach((k) => k.classList.remove("active"));
   }
 });
 
