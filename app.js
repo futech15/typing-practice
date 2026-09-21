@@ -239,9 +239,9 @@ function resetLesson() {
 
 if (typingInput) {
     typingInput.value = "";
-    typingInput.disabled = false; 
+    typingInput.disabled = false;
+    setTimeout(() => typingInput.focus(), 50);
   }
-
   if (startButton) startButton.disabled = false;
   if (nextButton) nextButton.style.display = "none";
   if (resultsSection) resultsSection.style.display = "none";
