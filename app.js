@@ -1,4 +1,4 @@
-// Safely gather lesson definitions (Lessons 1-6)
+// Safely gather lesson definitions
 const rawLessons = [
   typeof lesson1 !== "undefined" ? lesson1 : null,
   typeof lesson2 !== "undefined" ? lesson2 : null,
@@ -9,7 +9,8 @@ const rawLessons = [
   typeof lesson7 !== "undefined" ? lesson7 : null,
   typeof lesson8 !== "undefined" ? lesson8 : null,
   typeof lesson9 !== "undefined" ? lesson9 : null,
-  typeof lesson10 !== "undefined" ? lesson10 : null
+  typeof lesson10 !== "undefined" ? lesson10 : null,
+  typeof lesson11 !== "undefined" ? lesson11 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
