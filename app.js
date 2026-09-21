@@ -237,9 +237,9 @@ function resetLesson() {
   correctCharacters = 0;
   incorrectCharacters = 0;
 
-  if (typingInput) {
+if (typingInput) {
     typingInput.value = "";
-    typingInput.disabled = true;
+    typingInput.disabled = false; 
   }
 
   if (startButton) startButton.disabled = false;
@@ -276,9 +276,15 @@ function renderLessonText() {
 }
 
 function handleTyping(event) {
+  const value = event.target.value;
+
+  // Auto-start the lesson & timer on the first character typed
+  if (!isRunning && value.length > 0) {
+    startLesson();
+  }
+
   if (!isRunning) return;
 
-  const value = event.target.value;
   const characters = lessonText.querySelectorAll(".typing-character");
 
 if (progressBar && selectedLesson) {
@@ -519,6 +525,11 @@ function openLessonModal(index) {
   
   // Initialize Boss Battle UI if Lesson 11 is selected
   setupBossBattle(index);
+
+  // Automatically place cursor in the input box so typing works instantly
+  if (typingInput) {
+    setTimeout(() => typingInput.focus(), 100);
+  }
 }
 
 function closeLessonModal() {
