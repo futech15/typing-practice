@@ -608,11 +608,20 @@ function highlightNextKey(expectedChar) {
     return;
   }
 
-  // 2. Shift Key Prompt for Capital Letters & Special Symbols (Matches HTML data-key="shift")
-  const shiftSymbols = '~!@#$%^&*()_+:"{}<>?';
-  const isUppercase = expectedChar >= "A" && expectedChar <= "Z";
-  const requiresShift = isUppercase || shiftSymbols.includes(expectedChar);
+  // Map shift characters/symbols to their physical base key data-key attributes
+  const shiftMap = {
+    '~': '`', '!': '1', '@': '2', '#': '3', '$': '4',
+    '%': '5', '^': '6', '&': '7', '*': '8', '(': '9',
+    ')': '0', '_': '-', '+': '=', '{': '[', '}': ']',
+    '|': '\\', ':': ';', '"': "'", '<': ',', '>': '.',
+    '?': '/'
+  };
 
+  const isUppercase = expectedChar >= "A" && expectedChar <= "Z";
+  const isShiftSymbol = expectedChar in shiftMap;
+  const requiresShift = isUppercase || isShiftSymbol;
+
+  // 2. Highlight Shift Key if required
   if (requiresShift) {
     const shiftKeys = document.querySelectorAll('.virtual-keyboard .key[data-key="shift"]');
     shiftKeys.forEach((key) => key.classList.add("next-key"));
@@ -624,9 +633,14 @@ function highlightNextKey(expectedChar) {
     keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
-    const targetKey = expectedChar.toLowerCase();
-    // Safely query DOM with CSS escaping for punctuation/symbols
-    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`) ||
+    // Resolve shift symbols to their base key (e.g., '*' becomes '8')
+    let baseKey = expectedChar.toLowerCase();
+    if (isShiftSymbol) {
+      baseKey = shiftMap[expectedChar];
+    }
+
+    // Safely query DOM with CSS escaping
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(baseKey)}"]`) ||
                  document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(expectedChar)}"]`);
   }
 
