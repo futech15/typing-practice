@@ -616,6 +616,7 @@ let isBossBattle = false;
 // 1. Initialize Battle Arena when starting a lesson
 function setupBossBattle(lessonIndex) {
   const arena = document.getElementById('battleArena');
+  const keyboard = document.querySelector('.virtual-keyboard'); // Target virtual keyboard
   const bossHpBar = document.getElementById('bossHpBar');
   const battleMessage = document.getElementById('battleMessage');
   const trollSprite = document.getElementById('trollSprite');
@@ -624,15 +625,27 @@ function setupBossBattle(lessonIndex) {
   if (lessonIndex === 10) {
     isBossBattle = true;
     bossCurrentHp = 100;
+    
     if (bossHpBar) bossHpBar.style.width = '100%';
     if (trollSprite) {
       trollSprite.style.transform = 'scale(1)';
       trollSprite.textContent = '🧌';
     }
     if (battleMessage) battleMessage.textContent = 'Type accurately to cast spells and defeat the troll!';
-    if (arena) arena.style.display = 'block';
+    
+    // SWAP UI: Hide keyboard, show battle arena inside the main modal slot
+    if (keyboard) keyboard.style.display = 'none';
+    if (arena) {
+      arena.style.display = 'block';
+      // Move arena element directly above the progress bar if needed
+      if (keyboard && keyboard.parentNode) {
+        keyboard.parentNode.insertBefore(arena, keyboard);
+      }
+    }
   } else {
     isBossBattle = false;
+    // RESTORE UI: Show keyboard, hide battle arena for standard lessons
+    if (keyboard) keyboard.style.display = 'block';
     if (arena) arena.style.display = 'none';
   }
 }
