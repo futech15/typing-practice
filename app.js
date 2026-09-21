@@ -30,83 +30,21 @@ let timerInterval = null;
 let activeHoldKey = null;
 let isHoldKeyPressed = false;
 
+// Case State
+let isCapsLock = false;
+let isShiftPressed = false;
+
+// Boss Battle State Variables (LESSON 11)
+let bossMaxHp = 100;
+let bossCurrentHp = 100;
+let isBossBattle = false;
+
 // Tracks character positions where a mistype occurred
 let mistypedIndices = new Set();
 
-// Combined Keydown Listener (Held Key Check + Visual Light Blue Highlight)
-window.addEventListener("keydown", (event) => {
-  // 1. Held Key Gatekeeper Logic
-  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
-    event.preventDefault(); // Prevents key repetition
-    isHoldKeyPressed = true;
-    checkHoldKeyRequirement();
-  }
-
-  // 2. Light Blue Highlight for Physically Pressed Key
-  const rawKey = event.key;
-  let targetKey = rawKey === " " ? " " : rawKey.toLowerCase();
-  
-  if (rawKey === "Spacebar" || rawKey === " ") targetKey = " ";
-
-  try {
-    const keys = document.querySelectorAll(
-      `.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`
-    );
-    keys.forEach((keyEl) => keyEl.classList.add("active"));
-  } catch (err) {
-    // Fallback for special key characters
-  }
-});
-
-// Combined Keyup Listener (Held Key Release + Remove Light Blue Highlight)
-window.addEventListener("keyup", (event) => {
-  // 1. Held Key Release Logic
-  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
-    isHoldKeyPressed = false;
-    checkHoldKeyRequirement();
-  }
-
-  // 2. Remove Light Blue Active State Across Virtual Keys
-  const rawKey = event.key;
-  let targetKey = rawKey === " " ? " " : rawKey.toLowerCase();
-
-  try {
-    const keys = document.querySelectorAll(
-      `.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`
-    );
-    keys.forEach((keyEl) => keyEl.classList.remove("active"));
-  } catch (err) {
-    // Fallback cleanup
-    document.querySelectorAll(".virtual-keyboard .key.active").forEach((k) => k.classList.remove("active"));
-  }
-});
-
-// Gatekeeper function for required key holds
-function checkHoldKeyRequirement() {
-  const warningModal = document.getElementById("holdKeyWarningModal");
-  const typingInput = document.getElementById("typingInput");
-
-  if (!activeHoldKey) {
-    if (warningModal) warningModal.style.display = "none";
-    if (typingInput && isRunning) typingInput.disabled = false;
-    return;
-  }
-
-  if (!isRunning) return;
-
-  if (isHoldKeyPressed) {
-    if (warningModal) warningModal.style.display = "none";
-    if (typingInput) {
-      typingInput.disabled = false;
-      if (document.activeElement !== typingInput) {
-        typingInput.focus();
-      }
-    }
-  } else {
-    if (warningModal) warningModal.style.display = "flex";
-    if (typingInput) typingInput.disabled = true;
-  }
-}
+let typedCharacters = 0;
+let correctCharacters = 0;
+let incorrectCharacters = 0;
 
 // DOM Element References
 const lessonCards = document.getElementById("lessonCards");
@@ -140,10 +78,6 @@ const overallAccuracy = document.getElementById("overallAccuracy");
 const overallTime = document.getElementById("overallTime");
 const completedLessonsContainer = document.getElementById("completedLessons");
 
-let typedCharacters = 0;
-let correctCharacters = 0;
-let incorrectCharacters = 0;
-
 document.addEventListener("DOMContentLoaded", initializeApp);
 
 function initializeApp() {
@@ -175,6 +109,96 @@ function initializeApp() {
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeLessonModal();
   });
+}
+
+// Unified Window Keydown Listener
+window.addEventListener("keydown", (event) => {
+  // 1. Held Key Gatekeeper Check
+  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
+    event.preventDefault();
+    isHoldKeyPressed = true;
+    checkHoldKeyRequirement();
+  }
+
+  // 2. Shift and CapsLock State Sync
+  if (event.key === "CapsLock") {
+    isCapsLock = event.getModifierState("CapsLock");
+    updateKeyboardCase();
+  }
+  if (event.key === "Shift") {
+    isShiftPressed = true;
+    updateKeyboardCase();
+  }
+
+  // 3. Light Blue Highlight for Physically Pressed Key (.active)
+  const keyName = event.key;
+  let targetAttr = keyName.toLowerCase();
+
+  if (keyName === " ") targetAttr = " ";
+  if (keyName === "Shift") targetAttr = "Shift";
+  if (keyName === "Enter") targetAttr = "Enter";
+
+  const keyElements = document.querySelectorAll(
+    `.virtual-keyboard .key[data-key="${targetAttr}"], .virtual-keyboard .key[data-key="${keyName}"]`
+  );
+
+  keyElements.forEach((el) => el.classList.add("active"));
+});
+
+// Unified Window Keyup Listener
+window.addEventListener("keyup", (event) => {
+  // 1. Held Key Release Logic
+  if (activeHoldKey && event.key.toLowerCase() === activeHoldKey) {
+    isHoldKeyPressed = false;
+    checkHoldKeyRequirement();
+  }
+
+  // 2. Shift State Sync
+  if (event.key === "Shift") {
+    isShiftPressed = false;
+    updateKeyboardCase();
+  }
+
+  // 3. Remove Light Blue Highlight (.active)
+  const keyName = event.key;
+  let targetAttr = keyName.toLowerCase();
+
+  if (keyName === " ") targetAttr = " ";
+  if (keyName === "Shift") targetAttr = "Shift";
+  if (keyName === "Enter") targetAttr = "Enter";
+
+  const keyElements = document.querySelectorAll(
+    `.virtual-keyboard .key[data-key="${targetAttr}"], .virtual-keyboard .key[data-key="${keyName}"]`
+  );
+
+  keyElements.forEach((el) => el.classList.remove("active"));
+});
+
+// Gatekeeper function for required key holds
+function checkHoldKeyRequirement() {
+  const warningModal = document.getElementById("holdKeyWarningModal");
+  const typingInput = document.getElementById("typingInput");
+
+  if (!activeHoldKey) {
+    if (warningModal) warningModal.style.display = "none";
+    if (typingInput && isRunning) typingInput.disabled = false;
+    return;
+  }
+
+  if (!isRunning) return;
+
+  if (isHoldKeyPressed) {
+    if (warningModal) warningModal.style.display = "none";
+    if (typingInput) {
+      typingInput.disabled = false;
+      if (document.activeElement !== typingInput) {
+        typingInput.focus();
+      }
+    }
+  } else {
+    if (warningModal) warningModal.style.display = "flex";
+    if (typingInput) typingInput.disabled = true;
+  }
 }
 
 function renderLessonCards() {
@@ -247,7 +271,6 @@ function startLesson() {
 
   if (startButton) startButton.disabled = true;
 
-  // ENABLE TYPING INPUT
   if (typingInput) {
     typingInput.disabled = false;
     typingInput.focus();
@@ -273,7 +296,7 @@ function resetLesson() {
   correctCharacters = 0;
   incorrectCharacters = 0;
 
-if (typingInput) {
+  if (typingInput) {
     typingInput.value = "";
     typingInput.disabled = false;
     setTimeout(() => typingInput.focus(), 50);
@@ -288,8 +311,8 @@ if (typingInput) {
   if (accuracyDisplay) accuracyDisplay.textContent = "100%";
   if (errorDisplay) errorDisplay.textContent = "0";
 
-  // CLEAR KEYBOARD HIGHLIGHTS
-  document.querySelectorAll(".key").forEach((k) => k.classList.remove("active", "next-key"));
+  // Clear visual keyboard highlights
+  document.querySelectorAll(".virtual-keyboard .key").forEach((k) => k.classList.remove("active", "next-key"));
 
   checkHoldKeyRequirement();
   renderLessonText();
@@ -314,7 +337,6 @@ function renderLessonText() {
 function handleTyping(event) {
   const value = event.target.value;
 
-  // Auto-start the lesson & timer on the first character typed
   if (!isRunning && value.length > 0) {
     startLesson();
   }
@@ -323,11 +345,10 @@ function handleTyping(event) {
 
   const characters = lessonText.querySelectorAll(".typing-character");
 
-if (progressBar && selectedLesson) {
+  if (progressBar && selectedLesson) {
     const progressPercent = Math.min((value.length / selectedLesson.text.length) * 100, 100);
     progressBar.style.width = `${progressPercent}%`;
 
-    // Trigger spell attack animations during Lesson 11
     if (isBossBattle) {
       handleBossAttack(progressPercent);
     }
@@ -341,13 +362,13 @@ if (progressBar && selectedLesson) {
     if (index < value.length) {
       if (value[index] === selectedLesson.text[index]) {
         if (mistypedIndices.has(index)) {
-          character.classList.add("corrected"); // Yellow
+          character.classList.add("corrected");
         } else {
-          character.classList.add("correct"); // Green
+          character.classList.add("correct");
         }
         currentCorrectCount++;
       } else {
-        character.classList.add("incorrect"); // Red
+        character.classList.add("incorrect");
         mistypedIndices.add(index);
       }
     } else if (index === value.length) {
@@ -559,10 +580,8 @@ function openLessonModal(index) {
   const modal = document.getElementById("typingModal");
   if (modal) modal.classList.add("active");
   
-  // Initialize Boss Battle UI if Lesson 11 is selected
   setupBossBattle(index);
 
-  // Automatically place cursor in the input box so typing works instantly
   if (typingInput) {
     setTimeout(() => typingInput.focus(), 100);
   }
@@ -574,41 +593,40 @@ function closeLessonModal() {
   resetLesson();
 }
 
+// Highlights expected next key in Dark Blue (.next-key)
 function highlightNextKey(expectedChar) {
-  // Clear all previous dark blue next-key highlights
   document.querySelectorAll(".virtual-keyboard .key").forEach((key) => {
     key.classList.remove("next-key");
   });
 
   if (!expectedChar) return;
 
-  // 1. Handle Enter Key for line breaks
+  // 1. Line Breaks
   if (expectedChar === "\n" || expectedChar === "\r") {
     const enterKey = document.querySelector('.virtual-keyboard .key[data-key="Enter"]');
     if (enterKey) enterKey.classList.add("next-key");
     return;
   }
 
-  // 2. Check if the character requires holding Shift
+  // 2. Shift Key Prompt for Capital Letters & Special Symbols
   const shiftSymbols = '~!@#$%^&*()_+:"{}<>?';
   const isUppercase = expectedChar >= "A" && expectedChar <= "Z";
   const requiresShift = isUppercase || shiftSymbols.includes(expectedChar);
 
   if (requiresShift) {
-    // Highlight all Shift keys in dark blue
     const shiftKeys = document.querySelectorAll('.virtual-keyboard .key[data-key="Shift"]');
     shiftKeys.forEach((key) => key.classList.add("next-key"));
   }
 
-  // 3. Find and highlight the target character key
+  // 3. Target Character Key
   let keyElement;
   if (expectedChar === " " || expectedChar === "\u00A0") {
     keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
     const targetKey = expectedChar.toLowerCase();
-    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`) ||
-                 document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(expectedChar)}"]`);
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${targetKey}"]`) ||
+                 document.querySelector(`.virtual-keyboard .key[data-key="${expectedChar}"]`);
   }
 
   if (keyElement) {
@@ -616,9 +634,7 @@ function highlightNextKey(expectedChar) {
   }
 }
 
-let isCapsLock = false;
-let isShiftPressed = false;
-
+// Dynamically updates physical keyboard letter cases and special characters
 function updateKeyboardCase() {
   const isUppercase = (isCapsLock && !isShiftPressed) || (!isCapsLock && isShiftPressed);
 
@@ -636,134 +652,74 @@ function updateKeyboardCase() {
   });
 }
 
-window.addEventListener("keydown", (e) => {
-  const rawKey = e.key;
-
-  if (e.key === "CapsLock") {
-    isCapsLock = e.getModifierState("CapsLock");
-    updateKeyboardCase();
-  }
-
-  if (e.key === "Shift") {
-    isShiftPressed = true;
-    updateKeyboardCase();
-  }
-
-  // Clear all key active states first
-  document.querySelectorAll(".key").forEach((k) => k.classList.remove("active"));
-
-  let keyToMatch = rawKey;
-
-  // For letters, match the lowercase data-key
-  if (keyToMatch.length === 1 && /[a-zA-Z]/.test(keyToMatch)) {
-    keyToMatch = keyToMatch.toLowerCase();
-  }
-
-  try {
-    const keys = document.querySelectorAll(
-      `.key[data-key="${CSS.escape(keyToMatch)}"]`
-    );
-
-    keys.forEach((keyEl) => keyEl.classList.add("active"));
-  } catch (err) {
-    // Ignore selector errors
-  }
-});
-
-window.addEventListener("keyup", (e) => {
-  if (e.key === "Shift") {
-    isShiftPressed = false;
-    updateKeyboardCase();
-  }
-
-  // Remove active state across all keys on keyup
-  document.querySelectorAll(".key").forEach((keyEl) => {
-    keyEl.classList.remove("active");
-  });
-});
-
-// Boss Battle State Variables LESSON 11
-let bossMaxHp = 100;
-let bossCurrentHp = 100;
-let isBossBattle = false;
-
-// 1. Initialize Battle Arena when starting a lesson
+// Initialize Boss Battle Arena for Lesson 11
 function setupBossBattle(lessonIndex) {
-  const arena = document.getElementById('battleArena');
-  const keyboard = document.querySelector('.virtual-keyboard'); // Target virtual keyboard
-  const bossHpBar = document.getElementById('bossHpBar');
-  const battleMessage = document.getElementById('battleMessage');
-  const trollSprite = document.getElementById('trollSprite');
+  const arena = document.getElementById("battleArena");
+  const keyboard = document.querySelector(".virtual-keyboard");
+  const bossHpBar = document.getElementById("bossHpBar");
+  const battleMessage = document.getElementById("battleMessage");
+  const trollSprite = document.getElementById("trollSprite");
 
-  // Check if current lesson is Lesson 11 (index 10)
   if (lessonIndex === 10) {
     isBossBattle = true;
     bossCurrentHp = 100;
     
-    if (bossHpBar) bossHpBar.style.width = '100%';
+    if (bossHpBar) bossHpBar.style.width = "100%";
     if (trollSprite) {
-      trollSprite.style.transform = 'scale(1)';
-      trollSprite.textContent = '🧌';
+      trollSprite.style.transform = "scale(1)";
+      trollSprite.textContent = "🧌";
     }
-    if (battleMessage) battleMessage.textContent = 'Type accurately to cast spells and defeat the troll!';
+    if (battleMessage) battleMessage.textContent = "Type accurately to cast spells and defeat the troll!";
     
-    // SWAP UI: Hide keyboard, show battle arena inside the main modal slot
-    if (keyboard) keyboard.style.display = 'none';
+    if (keyboard) keyboard.style.display = "none";
     if (arena) {
-      arena.style.display = 'block';
-      // Move arena element directly above the progress bar if needed
+      arena.style.display = "block";
       if (keyboard && keyboard.parentNode) {
         keyboard.parentNode.insertBefore(arena, keyboard);
       }
     }
   } else {
     isBossBattle = false;
-    // RESTORE UI: Show keyboard, hide battle arena for standard lessons
-    if (keyboard) keyboard.style.display = 'block';
-    if (arena) arena.style.display = 'none';
+    if (keyboard) keyboard.style.display = "block";
+    if (arena) arena.style.display = "none";
   }
 }
 
-// 2. Trigger Spell Cast & Damage Troll on Space/Word Completion
+// Trigger Spell Cast & Damage Troll during Lesson 11
 function handleBossAttack(progressPercent) {
   if (!isBossBattle) return;
 
-  // Calculate Boss HP based on typing completion percentage
   bossCurrentHp = Math.max(0, 100 - progressPercent);
-  const bossHpBar = document.getElementById('bossHpBar');
+  const bossHpBar = document.getElementById("bossHpBar");
   if (bossHpBar) bossHpBar.style.width = `${bossCurrentHp}%`;
 
-  // Animate Wizard casting a spell
-  const wizard = document.getElementById('wizardSprite');
-  const spell = document.getElementById('spellEffect');
-  const troll = document.getElementById('trollSprite');
-  const battleMessage = document.getElementById('battleMessage');
+  const wizard = document.getElementById("wizardSprite");
+  const spell = document.getElementById("spellEffect");
+  const troll = document.getElementById("trollSprite");
+  const battleMessage = document.getElementById("battleMessage");
 
-  if (wizard) wizard.style.transform = 'scale(1.2) translateX(10px)';
+  if (wizard) wizard.style.transform = "scale(1.2) translateX(10px)";
   
-  // Spell projectile animation
   if (spell) {
-    spell.style.opacity = '1';
-    spell.style.transform = 'translateX(180px)';
+    spell.style.opacity = "1";
+    spell.style.transform = "translateX(180px)";
   }
 
   setTimeout(() => {
-    if (wizard) wizard.style.transform = 'scale(1)';
+    if (wizard) wizard.style.transform = "scale(1)";
     if (spell) {
-      spell.style.opacity = '0';
-      spell.style.transform = 'translateX(0px)';
+      spell.style.opacity = "0";
+      spell.style.transform = "translateX(0px)";
     }
     
-    // Troll takes damage flinch
     if (troll && bossCurrentHp > 0) {
-      troll.style.transform = 'scale(0.9) rotate(-10deg)';
-      setTimeout(() => troll.style.transform = 'scale(1)', 200);
+      troll.style.transform = "scale(0.9) rotate(-10deg)";
+      setTimeout(() => (troll.style.transform = "scale(1)"), 200);
     }
   }, 250);
 
-  // Victory check
   if (bossCurrentHp <= 0 && troll) {
-    troll.textContent = '💀';
-    if (battleMessage) battleMessage.textContent = 'VICTORY! You defeated the Troll!';
+    troll.textContent = "💀";
+    if (battleMessage) battleMessage.textContent = "VICTORY! You defeated the Troll!";
   }
 }
