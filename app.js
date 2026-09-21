@@ -585,7 +585,7 @@ function updateKeyboardCase() {
 }
 
 window.addEventListener("keydown", (e) => {
-  const rawKey = e.key.toLowerCase();
+  const rawKey = e.key;
 
   if (e.key === "CapsLock") {
     isCapsLock = e.getModifierState("CapsLock");
@@ -597,17 +597,24 @@ window.addEventListener("keydown", (e) => {
     updateKeyboardCase();
   }
 
-  // Clear all key active states first to prevent sticking
+  // Clear all key active states first
   document.querySelectorAll(".key").forEach((k) => k.classList.remove("active"));
 
-  const keyToMatch = rawKey === " " ? " " : rawKey;
-  
-  // Safe selector lookup
+  let keyToMatch = rawKey;
+
+  // For letters, match the lowercase data-key
+  if (keyToMatch.length === 1 && /[a-zA-Z]/.test(keyToMatch)) {
+    keyToMatch = keyToMatch.toLowerCase();
+  }
+
   try {
-    const keys = document.querySelectorAll(`.key[data-key="${CSS.escape(keyToMatch)}"]`);
+    const keys = document.querySelectorAll(
+      `.key[data-key="${CSS.escape(keyToMatch)}"]`
+    );
+
     keys.forEach((keyEl) => keyEl.classList.add("active"));
   } catch (err) {
-    // Fallback if key escapes fail
+    // Ignore selector errors
   }
 });
 
