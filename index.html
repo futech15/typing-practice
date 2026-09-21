@@ -300,7 +300,23 @@
 <script src="lessons/lesson8.js"></script>
 <script src="lessons/lesson9.js"></script>
 <script src="lessons/lesson10.js"></script>
+<script src="lessons/lesson11.js"></script>
+<!-- Inside index.html, above #lessonText -->
+<div id="gameStage" class="game-stage" style="display: none;">
+  <!-- Player Character -->
+  <div id="playerChar" class="character player">🧙‍♂️</div>
 
+  <!-- Projectile Area -->
+  <div id="projectileArea" class="projectile-area"></div>
+
+  <!-- Enemy Character & Health Bar -->
+  <div class="enemy-container">
+    <div class="health-bar-bg">
+      <div id="enemyHealth" class="health-bar-fill" style="width: 100%;"></div>
+    </div>
+    <div id="enemyChar" class="character enemy">🧌</div>
+  </div>
+</div>
 <script src="app.js"></script>
 
 </body>
