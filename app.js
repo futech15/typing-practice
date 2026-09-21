@@ -601,20 +601,20 @@ function highlightNextKey(expectedChar) {
 
   if (!expectedChar) return;
 
-  // 1. Line Breaks
+  // 1. Line Breaks (Matches HTML data-key="enter")
   if (expectedChar === "\n" || expectedChar === "\r") {
-    const enterKey = document.querySelector('.virtual-keyboard .key[data-key="Enter"]');
+    const enterKey = document.querySelector('.virtual-keyboard .key[data-key="enter"]');
     if (enterKey) enterKey.classList.add("next-key");
     return;
   }
 
-  // 2. Shift Key Prompt for Capital Letters & Special Symbols
+  // 2. Shift Key Prompt for Capital Letters & Special Symbols (Matches HTML data-key="shift")
   const shiftSymbols = '~!@#$%^&*()_+:"{}<>?';
   const isUppercase = expectedChar >= "A" && expectedChar <= "Z";
   const requiresShift = isUppercase || shiftSymbols.includes(expectedChar);
 
   if (requiresShift) {
-    const shiftKeys = document.querySelectorAll('.virtual-keyboard .key[data-key="Shift"]');
+    const shiftKeys = document.querySelectorAll('.virtual-keyboard .key[data-key="shift"]');
     shiftKeys.forEach((key) => key.classList.add("next-key"));
   }
 
@@ -625,8 +625,9 @@ function highlightNextKey(expectedChar) {
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
     const targetKey = expectedChar.toLowerCase();
-    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${targetKey}"]`) ||
-                 document.querySelector(`.virtual-keyboard .key[data-key="${expectedChar}"]`);
+    // Safely query DOM with CSS escaping for punctuation/symbols
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`) ||
+                 document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(expectedChar)}"]`);
   }
 
   if (keyElement) {
