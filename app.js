@@ -281,9 +281,14 @@ function handleTyping(event) {
   const value = event.target.value;
   const characters = lessonText.querySelectorAll(".typing-character");
 
-  if (progressBar && selectedLesson) {
+if (progressBar && selectedLesson) {
     const progressPercent = Math.min((value.length / selectedLesson.text.length) * 100, 100);
     progressBar.style.width = `${progressPercent}%`;
+
+    // Trigger spell attack animations during Lesson 11
+    if (isBossBattle) {
+      handleBossAttack(progressPercent);
+    }
   }
 
   let currentCorrectCount = 0;
@@ -511,6 +516,9 @@ function openLessonModal(index) {
   loadLesson(index);
   const modal = document.getElementById("typingModal");
   if (modal) modal.classList.add("active");
+  
+  // Initialize Boss Battle UI if Lesson 11 is selected
+  setupBossBattle(index);
 }
 
 function closeLessonModal() {
@@ -599,3 +607,76 @@ window.addEventListener("keyup", (e) => {
     keyEl.classList.remove("active");
   });
 });
+
+// Boss Battle State Variables LESSON 11
+let bossMaxHp = 100;
+let bossCurrentHp = 100;
+let isBossBattle = false;
+
+// 1. Initialize Battle Arena when starting a lesson
+function setupBossBattle(lessonIndex) {
+  const arena = document.getElementById('battleArena');
+  const bossHpBar = document.getElementById('bossHpBar');
+  const battleMessage = document.getElementById('battleMessage');
+  const trollSprite = document.getElementById('trollSprite');
+
+  // Check if current lesson is Lesson 11 (index 10)
+  if (lessonIndex === 10) {
+    isBossBattle = true;
+    bossCurrentHp = 100;
+    if (bossHpBar) bossHpBar.style.width = '100%';
+    if (trollSprite) {
+      trollSprite.style.transform = 'scale(1)';
+      trollSprite.textContent = '🧌';
+    }
+    if (battleMessage) battleMessage.textContent = 'Type accurately to cast spells and defeat the troll!';
+    if (arena) arena.style.display = 'block';
+  } else {
+    isBossBattle = false;
+    if (arena) arena.style.display = 'none';
+  }
+}
+
+// 2. Trigger Spell Cast & Damage Troll on Space/Word Completion
+function handleBossAttack(progressPercent) {
+  if (!isBossBattle) return;
+
+  // Calculate Boss HP based on typing completion percentage
+  bossCurrentHp = Math.max(0, 100 - progressPercent);
+  const bossHpBar = document.getElementById('bossHpBar');
+  if (bossHpBar) bossHpBar.style.width = `${bossCurrentHp}%`;
+
+  // Animate Wizard casting a spell
+  const wizard = document.getElementById('wizardSprite');
+  const spell = document.getElementById('spellEffect');
+  const troll = document.getElementById('trollSprite');
+  const battleMessage = document.getElementById('battleMessage');
+
+  if (wizard) wizard.style.transform = 'scale(1.2) translateX(10px)';
+  
+  // Spell projectile animation
+  if (spell) {
+    spell.style.opacity = '1';
+    spell.style.transform = 'translateX(180px)';
+  }
+
+  setTimeout(() => {
+    if (wizard) wizard.style.transform = 'scale(1)';
+    if (spell) {
+      spell.style.opacity = '0';
+      spell.style.transform = 'translateX(0px)';
+    }
+    
+    // Troll takes damage flinch
+    if (troll && bossCurrentHp > 0) {
+      troll.style.transform = 'scale(0.9) rotate(-10deg)';
+      setTimeout(() => troll.style.transform = 'scale(1)', 200);
+    }
+  }, 250);
+
+  // Victory check
+  if (bossCurrentHp <= 0 && troll) {
+    troll.textContent = '💀';
+    if (battleMessage) battleMessage.textContent = 'VICTORY! You defeated the Troll!';
+  }
+}
