@@ -667,7 +667,7 @@ function updateKeyboardCase() {
   });
 }
 
-// Initialize Boss Battle Arena for Lesson 11
+// Initialize Boss Battle Arena for Lesson 11 (Index 10)
 function setupBossBattle(lessonIndex) {
   const arena = document.getElementById("battleArena");
   const keyboard = document.querySelector(".virtual-keyboard");
@@ -686,14 +686,12 @@ function setupBossBattle(lessonIndex) {
     }
     if (battleMessage) battleMessage.textContent = "Type accurately to cast spells and defeat the troll!";
     
+    // Hide keyboard and display battle arena
     if (keyboard) keyboard.style.display = "none";
-    if (arena) {
-      arena.style.display = "block";
-      if (keyboard && keyboard.parentNode) {
-        keyboard.parentNode.insertBefore(arena, keyboard);
-      }
-    }
+    if (arena) arena.style.display = "block";
+
   } else {
+    // Normal lessons (Lesson 12 and others): restore keyboard and hide arena
     isBossBattle = false;
     if (keyboard) keyboard.style.display = "block";
     if (arena) arena.style.display = "none";
