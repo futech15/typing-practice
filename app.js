@@ -230,6 +230,9 @@ function loadLesson(index) {
 
   if (!selectedLesson) return;
 
+  // FIX: Make sure Boss Battle / Keyboard view toggles correctly when loading any lesson!
+  setupBossBattle(selectedLessonIndex);
+
   activeHoldKey = selectedLesson.requiredHoldKey ? selectedLesson.requiredHoldKey.toLowerCase() : null;
   isHoldKeyPressed = false;
 
@@ -579,8 +582,6 @@ function openLessonModal(index) {
   loadLesson(index);
   const modal = document.getElementById("typingModal");
   if (modal) modal.classList.add("active");
-  
-  setupBossBattle(index);
 
   if (typingInput) {
     setTimeout(() => typingInput.focus(), 100);
