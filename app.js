@@ -543,24 +543,44 @@ function closeLessonModal() {
 }
 
 function highlightNextKey(expectedChar) {
-  document.querySelectorAll('.virtual-keyboard .key').forEach(key => {
-    key.classList.remove('next-key');
+  // Clear all previous dark blue next-key highlights
+  document.querySelectorAll(".virtual-keyboard .key").forEach((key) => {
+    key.classList.remove("next-key");
   });
 
   if (!expectedChar) return;
 
-  let targetKey = expectedChar.toLowerCase();
-  let keyElement;
+  // 1. Handle Enter Key for line breaks
+  if (expectedChar === "\n" || expectedChar === "\r") {
+    const enterKey = document.querySelector('.virtual-keyboard .key[data-key="Enter"]');
+    if (enterKey) enterKey.classList.add("next-key");
+    return;
+  }
 
-  if (targetKey === ' ' || targetKey === '\u00A0') {
+  // 2. Check if the character requires holding Shift
+  const shiftSymbols = '~!@#$%^&*()_+:"{}<>?';
+  const isUppercase = expectedChar >= "A" && expectedChar <= "Z";
+  const requiresShift = isUppercase || shiftSymbols.includes(expectedChar);
+
+  if (requiresShift) {
+    // Highlight all Shift keys in dark blue
+    const shiftKeys = document.querySelectorAll('.virtual-keyboard .key[data-key="Shift"]');
+    shiftKeys.forEach((key) => key.classList.add("next-key"));
+  }
+
+  // 3. Find and highlight the target character key
+  let keyElement;
+  if (expectedChar === " " || expectedChar === "\u00A0") {
     keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
-    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`);
+    const targetKey = expectedChar.toLowerCase();
+    keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(targetKey)}"]`) ||
+                 document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(expectedChar)}"]`);
   }
 
   if (keyElement) {
-    keyElement.classList.add('next-key');
+    keyElement.classList.add("next-key");
   }
 }
 
