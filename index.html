@@ -11,10 +11,11 @@
   <div class="app-container">
 
     <header class="app-header">
-     <div>
-  <img src="typelab.png" alt="TypeLab" class="typelab-logo">
-  <p class="subtitle">Improve your typing speed and accuracy</p>
-<p class="subtitle credit">© 2026 HSA Cleveland · Developed by Mr. Rabar</p></div>
+      <div>
+        <img src="typelab.png" alt="TypeLab" class="typelab-logo">
+        <p class="subtitle">Improve your typing speed and accuracy</p>
+        <p class="subtitle credit">© 2026 HSA Cleveland · Developed by Mr. Rabar</p>
+      </div>
 
       <div class="overall-stats">
         <h3>Overall Average</h3>
@@ -115,36 +116,6 @@
 
   <!-- FULL-SCREEN TYPING POPUP MODAL -->
   <div id="typingModal" class="modal-overlay">
-
-  <!-- Boss Battle Visual Arena (Replaces Virtual Keyboard for Lesson 11) -->
-<div id="battleArena" style="display: none; background: linear-gradient(135deg, #1e1b4b, #311b92); border-radius: 12px; padding: 30px 20px; margin: 20px 0; color: white; text-align: center; position: relative; overflow: hidden; border: 2px solid #6366f1; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
-  <div style="display: flex; justify-content: space-around; align-items: center; max-width: 600px; margin: 0 auto; position: relative;">
-    
-    <!-- Hero (Wizard) -->
-    <div style="text-align: center; z-index: 2;">
-      <div id="wizardSprite" style="font-size: 70px; transition: transform 0.2s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">🧙‍♂️</div>
-      <div style="font-weight: bold; margin-top: 5px; letter-spacing: 1px;">Wizard</div>
-    </div>
-
-    <!-- Spell Effect Slot -->
-    <div id="spellEffect" style="font-size: 36px; opacity: 0; transition: all 0.3s ease-out; position: absolute; left: 20%; z-index: 1;">✨⚡🔥</div>
-
-    <!-- Boss (Troll) -->
-    <div style="text-align: center; z-index: 2;">
-      <div id="trollSprite" style="font-size: 70px; transition: transform 0.2s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">🧌</div>
-      <div style="font-weight: bold; margin-top: 5px; color: #ff6b6b; letter-spacing: 1px;">Boss Troll</div>
-      
-      <!-- Boss Health Bar -->
-      <div style="width: 140px; background: rgba(255,255,255,0.2); height: 14px; border-radius: 7px; margin: 8px auto 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
-        <div id="bossHpBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #f56565, #e53e3e); transition: width 0.3s ease;"></div>
-      </div>
-    </div>
-
-  </div>
-  <div id="battleMessage" style="margin-top: 20px; font-size: 15px; color: #c7d2fe; font-style: italic; font-weight: 500;">Type accurately to cast spells and defeat the troll!</div>
-</div>
-
-    
     <div class="modal-content">
 
       <!-- Universal Key Hold Warning Overlay -->
@@ -164,6 +135,30 @@
           <p id="lessonDescription"></p>
         </div>
         <div class="lesson-number" id="lessonNumber">1</div>
+      </div>
+
+      <!-- Boss Battle Visual Arena -->
+      <div id="battleArena" style="display: none; background: linear-gradient(135deg, #1e1b4b, #311b92); border-radius: 12px; padding: 20px; margin: 15px 0; color: white; text-align: center; position: relative; overflow: hidden; border: 2px solid #6366f1; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);">
+        <div style="display: flex; justify-content: space-around; align-items: center; max-width: 600px; margin: 0 auto; position: relative;">
+          
+          <div style="text-align: center; z-index: 2;">
+            <div id="wizardSprite" style="font-size: 60px; transition: transform 0.2s;">🧙‍♂️</div>
+            <div style="font-weight: bold; margin-top: 5px;">Wizard</div>
+          </div>
+
+          <div id="spellEffect" style="font-size: 32px; opacity: 0; transition: all 0.3s ease-out; position: absolute; left: 20%; z-index: 1;">✨⚡🔥</div>
+
+          <div style="text-align: center; z-index: 2;">
+            <div id="trollSprite" style="font-size: 60px; transition: transform 0.2s;">🧌</div>
+            <div style="font-weight: bold; margin-top: 5px; color: #ff6b6b;">Boss Troll</div>
+            
+            <div style="width: 130px; background: rgba(255,255,255,0.2); height: 12px; border-radius: 6px; margin: 8px auto 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.4);">
+              <div id="bossHpBar" style="width: 100%; height: 100%; background: linear-gradient(90deg, #f56565, #e53e3e); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+
+        </div>
+        <div id="battleMessage" style="margin-top: 12px; font-size: 14px; color: #c7d2fe; font-style: italic;">Type accurately to cast spells and defeat the troll!</div>
       </div>
 
       <!-- Text students must type -->
@@ -267,7 +262,6 @@
 
       <!-- Buttons -->
       <div class="button-row">
-        <!-- <button id="startButton" class="primary-button">Start Lesson</button>-->
         <button id="resetButton" class="secondary-button">Reset</button>
         <button id="nextButton" class="secondary-button" style="display: none;">Next Lesson</button>
       </div>
@@ -320,39 +314,22 @@
   </div>
 
   <!-- Lesson Files -->
-<script src="lessons/lesson1.js"></script>
-<script src="lessons/lesson2.js"></script>
-<script src="lessons/lesson3.js"></script>
-<script src="lessons/lesson4.js"></script>
-<script src="lessons/lesson5.js"></script>
-<script src="lessons/lesson6.js"></script>
-<script src="lessons/lesson7.js"></script>
-<script src="lessons/lesson8.js"></script>
-<script src="lessons/lesson9.js"></script>
-<script src="lessons/lesson10.js"></script>
-<script src="lessons/lesson11.js"></script>
-<script src="lessons/lesson12.js"></script>
-<script src="lessons/lesson13.js"></script>
-<script src="lessons/lesson14.js"></script>
-<script src="lessons/lesson15.js"></script>
-
-<!-- Inside index.html, above #lessonText -->
-<div id="gameStage" class="game-stage" style="display: none;">
-  <!-- Player Character -->
-  <div id="playerChar" class="character player">🧙‍♂️</div>
-
-  <!-- Projectile Area -->
-  <div id="projectileArea" class="projectile-area"></div>
-
-  <!-- Enemy Character & Health Bar -->
-  <div class="enemy-container">
-    <div class="health-bar-bg">
-      <div id="enemyHealth" class="health-bar-fill" style="width: 100%;"></div>
-    </div>
-    <div id="enemyChar" class="character enemy">🧌</div>
-  </div>
-</div>
-<script src="app.js"></script>
+  <script src="lessons/lesson1.js"></script>
+  <script src="lessons/lesson2.js"></script>
+  <script src="lessons/lesson3.js"></script>
+  <script src="lessons/lesson4.js"></script>
+  <script src="lessons/lesson5.js"></script>
+  <script src="lessons/lesson6.js"></script>
+  <script src="lessons/lesson7.js"></script>
+  <script src="lessons/lesson8.js"></script>
+  <script src="lessons/lesson9.js"></script>
+  <script src="lessons/lesson10.js"></script>
+  <script src="lessons/lesson11.js"></script>
+  <script src="lessons/lesson12.js"></script>
+  <script src="lessons/lesson13.js"></script>
+  <script src="lessons/lesson14.js"></script>
+  <script src="lessons/lesson15.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
