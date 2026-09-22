@@ -1,4 +1,3 @@
-app.js
 // Safely gather lesson definitions
 const rawLessons = [
   typeof lesson1 !== "undefined" ? lesson1 : null,
@@ -112,6 +111,13 @@ function initializeApp() {
   });
 }
 
+// Helper to normalize physical key names to virtual keyboard data-key attributes
+function getNormalizedKeyAttr(keyName) {
+  if (!keyName) return "";
+  if (keyName === " " || keyName === "Spacebar") return "space";
+  return keyName.toLowerCase();
+}
+
 // Unified Window Keydown Listener
 window.addEventListener("keydown", (event) => {
   // 1. Held Key Gatekeeper Check
@@ -131,16 +137,10 @@ window.addEventListener("keydown", (event) => {
     updateKeyboardCase();
   }
 
-  // 3. Light Blue Highlight for Physically Pressed Key (.active)
-  const keyName = event.key;
-  let targetAttr = keyName.toLowerCase();
-
-  if (keyName === " ") targetAttr = " ";
-  if (keyName === "Shift") targetAttr = "Shift";
-  if (keyName === "Enter") targetAttr = "Enter";
-
+  // 3. Highlight Physically Pressed Key (.active)
+  const targetAttr = getNormalizedKeyAttr(event.key);
   const keyElements = document.querySelectorAll(
-    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(keyName)}"]`
+    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(event.key)}"]`
   );
 
   keyElements.forEach((el) => el.classList.add("active"));
@@ -160,16 +160,10 @@ window.addEventListener("keyup", (event) => {
     updateKeyboardCase();
   }
 
-  // 3. Remove Light Blue Highlight (.active)
-  const keyName = event.key;
-  let targetAttr = keyName.toLowerCase();
-
-  if (keyName === " ") targetAttr = " ";
-  if (keyName === "Shift") targetAttr = "Shift";
-  if (keyName === "Enter") targetAttr = "Enter";
-
+  // 3. Remove Highlight (.active)
+  const targetAttr = getNormalizedKeyAttr(event.key);
   const keyElements = document.querySelectorAll(
-    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(keyName)}"]`
+    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(event.key)}"]`
   );
 
   keyElements.forEach((el) => el.classList.remove("active"));
@@ -230,7 +224,6 @@ function loadLesson(index) {
 
   if (!selectedLesson) return;
 
-  // Toggle Boss Battle vs. Virtual Keyboard visibility
   setupBossBattle(selectedLessonIndex);
 
   activeHoldKey = selectedLesson.requiredHoldKey ? selectedLesson.requiredHoldKey.toLowerCase() : null;
@@ -315,7 +308,6 @@ function resetLesson() {
   if (accuracyDisplay) accuracyDisplay.textContent = "100%";
   if (errorDisplay) errorDisplay.textContent = "0";
 
-  // Clear keyboard highlights
   document.querySelectorAll(".virtual-keyboard .key").forEach((k) => k.classList.remove("active", "next-key"));
 
   checkHoldKeyRequirement();
@@ -610,7 +602,6 @@ function highlightNextKey(expectedChar) {
     return;
   }
 
-  // Map shift characters/symbols to physical base key data-key attributes
   const shiftMap = {
     '~': '`', '!': '1', '@': '2', '#': '3', '$': '4',
     '%': '5', '^': '6', '&': '7', '*': '8', '(': '9',
@@ -632,8 +623,8 @@ function highlightNextKey(expectedChar) {
   // 3. Target Character Key
   let keyElement;
   if (expectedChar === " " || expectedChar === "\u00A0") {
-    keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
-                 document.querySelector('.virtual-keyboard .key[data-key="space"]');
+    keyElement = document.querySelector('.virtual-keyboard .key[data-key="space"]') ||
+                 document.querySelector('.virtual-keyboard .key[data-key=" "]');
   } else {
     let baseKey = expectedChar.toLowerCase();
     if (isShiftSymbol) {
@@ -649,7 +640,6 @@ function highlightNextKey(expectedChar) {
   }
 }
 
-// Dynamically updates physical keyboard letter cases and special characters
 function updateKeyboardCase() {
   const isUppercase = (isCapsLock && !isShiftPressed) || (!isCapsLock && isShiftPressed);
 
@@ -667,7 +657,6 @@ function updateKeyboardCase() {
   });
 }
 
-// Initialize Boss Battle Arena for Lesson 11 (Index 10)
 function setupBossBattle(lessonIndex) {
   const arena = document.getElementById("battleArena");
   const keyboard = document.querySelector(".virtual-keyboard");
@@ -695,7 +684,6 @@ function setupBossBattle(lessonIndex) {
   }
 }
 
-// Trigger Spell Cast & Damage Troll during Lesson 11
 function handleBossAttack(progressPercent) {
   if (!isBossBattle) return;
 
