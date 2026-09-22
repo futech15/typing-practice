@@ -263,7 +263,6 @@
       <!-- Buttons -->
       <div class="button-row">
         <button id="resetButton" class="secondary-button">Reset</button>
-        <button id="nextButton" class="secondary-button" style="display: none;">Next Lesson</button>
       </div>
 
       <!-- Live Statistics -->
@@ -286,28 +285,34 @@
         </div>
       </div>
 
-      <!-- Lesson Result -->
-      <div class="lesson-result" id="resultsSection" style="display: none;">
-        <h3>Lesson Result</h3>
-        <div class="result-grid">
-          <div>
-            <span>WPM</span>
-            <strong id="resultWpm">0</strong>
+      <!-- Lesson Result Overlay -->
+      <div class="lesson-result-overlay" id="resultsSection" style="display: none;" onclick="closeLessonModal()">
+        <div class="result-card">
+          <div class="result-badge">🎉 Lesson Complete!</div>
+          <h2>Lesson Result</h2>
+          
+          <div class="result-grid">
+            <div class="result-stat wpm">
+              <span>WPM</span>
+              <strong id="resultWpm">0</strong>
+            </div>
+            <div class="result-stat accuracy">
+              <span>Accuracy</span>
+              <strong id="resultAccuracy">0%</strong>
+            </div>
+            <div class="result-stat errors">
+              <span>Errors</span>
+              <strong id="resultErrors">0</strong>
+            </div>
+            <div class="result-stat time">
+              <span>Time</span>
+              <strong id="resultTime">0 sec</strong>
+            </div>
           </div>
-          <div>
-            <span>Accuracy</span>
-            <strong id="resultAccuracy">0%</strong>
-          </div>
-          <div>
-            <span>Errors</span>
-            <strong id="resultErrors">0</strong>
-          </div>
-          <div>
-            <span>Time</span>
-            <strong id="resultTime">0 sec</strong>
-          </div>
+
+          <p id="resultMessage" class="result-feedback-msg"></p>
+          <div class="result-dismiss-hint">Click anywhere to choose next lesson ↵</div>
         </div>
-        <p id="resultMessage"></p>
       </div>
 
     </div>
