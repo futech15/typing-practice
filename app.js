@@ -139,7 +139,7 @@ window.addEventListener("keydown", (event) => {
   if (keyName === "Enter") targetAttr = "Enter";
 
   const keyElements = document.querySelectorAll(
-    `.virtual-keyboard .key[data-key="${targetAttr}"], .virtual-keyboard .key[data-key="${keyName}"]`
+    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(keyName)}"]`
   );
 
   keyElements.forEach((el) => el.classList.add("active"));
@@ -168,7 +168,7 @@ window.addEventListener("keyup", (event) => {
   if (keyName === "Enter") targetAttr = "Enter";
 
   const keyElements = document.querySelectorAll(
-    `.virtual-keyboard .key[data-key="${targetAttr}"], .virtual-keyboard .key[data-key="${keyName}"]`
+    `.virtual-keyboard .key[data-key="${CSS.escape(targetAttr)}"], .virtual-keyboard .key[data-key="${CSS.escape(keyName)}"]`
   );
 
   keyElements.forEach((el) => el.classList.remove("active"));
@@ -177,7 +177,6 @@ window.addEventListener("keyup", (event) => {
 // Gatekeeper function for required key holds
 function checkHoldKeyRequirement() {
   const warningModal = document.getElementById("holdKeyWarningModal");
-  const typingInput = document.getElementById("typingInput");
 
   if (!activeHoldKey) {
     if (warningModal) warningModal.style.display = "none";
@@ -230,7 +229,7 @@ function loadLesson(index) {
 
   if (!selectedLesson) return;
 
-  // FIX: Make sure Boss Battle / Keyboard view toggles correctly when loading any lesson!
+  // Toggle Boss Battle vs. Virtual Keyboard visibility
   setupBossBattle(selectedLessonIndex);
 
   activeHoldKey = selectedLesson.requiredHoldKey ? selectedLesson.requiredHoldKey.toLowerCase() : null;
@@ -304,6 +303,7 @@ function resetLesson() {
     typingInput.disabled = false;
     setTimeout(() => typingInput.focus(), 50);
   }
+
   if (startButton) startButton.disabled = false;
   if (nextButton) nextButton.style.display = "none";
   if (resultsSection) resultsSection.style.display = "none";
@@ -314,7 +314,7 @@ function resetLesson() {
   if (accuracyDisplay) accuracyDisplay.textContent = "100%";
   if (errorDisplay) errorDisplay.textContent = "0";
 
-  // Clear visual keyboard highlights
+  // Clear keyboard highlights
   document.querySelectorAll(".virtual-keyboard .key").forEach((k) => k.classList.remove("active", "next-key"));
 
   checkHoldKeyRequirement();
@@ -413,7 +413,7 @@ function updateLiveStats() {
   const wpm = Math.round(wordsTyped / minutes);
 
   const totalAttempts = currentInputLength + incorrectCharacters;
-  const accuracy = totalAttempts > 0 
+  const accuracy = totalAttempts > 0
     ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
     : 100;
 
@@ -440,7 +440,7 @@ function finishLesson() {
   const wpm = Math.round(wordsTyped / minutes);
 
   const totalAttempts = currentInputLength + incorrectCharacters;
-  const accuracy = totalAttempts > 0 
+  const accuracy = totalAttempts > 0
     ? Math.max(0, Math.round(((totalAttempts - incorrectCharacters) / totalAttempts) * 100))
     : 100;
 
@@ -450,8 +450,8 @@ function finishLesson() {
   if (resultTime) resultTime.textContent = `${Math.floor(elapsedSeconds)} sec`;
 
   if (resultMessage) {
-    resultMessage.textContent = accuracy >= 95 
-      ? "Great job! Excellent accuracy!" 
+    resultMessage.textContent = accuracy >= 95
+      ? "Great job! Excellent accuracy!"
       : "Good effort! Keep practicing to improve accuracy.";
   }
 
@@ -507,8 +507,8 @@ function saveLessonResult(result) {
 function updateOverallStats() {
   const results = getSavedResults();
 
-  const validResults = results.filter(result =>
-    lessons.some(lesson => lesson.id === result.lessonId)
+  const validResults = results.filter((result) =>
+    lessons.some((lesson) => lesson.id === result.lessonId)
   );
 
   if (overallLessons) {
@@ -563,7 +563,7 @@ function renderCompletedLessonsList() {
   results.forEach((item) => {
     html += `
       <li class="completed-item">
-        <strong>${item.lessonTitle}</strong> — ${item.wpm} WPM | ${item.accuracy}% Accuracy | ${item.time}s
+        <strong>${item.lessonTitle}</strong> —${item.wpm} WPM | ${item.accuracy}\% Accuracy \vert{}${item.time}s
       </li>
     `;
   });
@@ -602,14 +602,14 @@ function highlightNextKey(expectedChar) {
 
   if (!expectedChar) return;
 
-  // 1. Line Breaks (Matches HTML data-key="enter")
+  // 1. Line Breaks
   if (expectedChar === "\n" || expectedChar === "\r") {
     const enterKey = document.querySelector('.virtual-keyboard .key[data-key="enter"]');
     if (enterKey) enterKey.classList.add("next-key");
     return;
   }
 
-  // Map shift characters/symbols to their physical base key data-key attributes
+  // Map shift characters/symbols to physical base key data-key attributes
   const shiftMap = {
     '~': '`', '!': '1', '@': '2', '#': '3', '$': '4',
     '%': '5', '^': '6', '&': '7', '*': '8', '(': '9',
@@ -634,13 +634,11 @@ function highlightNextKey(expectedChar) {
     keyElement = document.querySelector('.virtual-keyboard .key[data-key=" "]') ||
                  document.querySelector('.virtual-keyboard .key[data-key="space"]');
   } else {
-    // Resolve shift symbols to their base key (e.g., '*' becomes '8')
     let baseKey = expectedChar.toLowerCase();
     if (isShiftSymbol) {
       baseKey = shiftMap[expectedChar];
     }
 
-    // Safely query DOM with CSS escaping
     keyElement = document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(baseKey)}"]`) ||
                  document.querySelector(`.virtual-keyboard .key[data-key="${CSS.escape(expectedChar)}"]`);
   }
@@ -679,20 +677,17 @@ function setupBossBattle(lessonIndex) {
   if (lessonIndex === 10) {
     isBossBattle = true;
     bossCurrentHp = 100;
-    
+
     if (bossHpBar) bossHpBar.style.width = "100%";
     if (trollSprite) {
       trollSprite.style.transform = "scale(1)";
       trollSprite.textContent = "🧌";
     }
     if (battleMessage) battleMessage.textContent = "Type accurately to cast spells and defeat the troll!";
-    
-    // Hide keyboard and display battle arena
+
     if (keyboard) keyboard.style.display = "none";
     if (arena) arena.style.display = "block";
-
   } else {
-    // Normal lessons (Lesson 12 and others): restore keyboard and hide arena
     isBossBattle = false;
     if (keyboard) keyboard.style.display = "block";
     if (arena) arena.style.display = "none";
@@ -713,7 +708,7 @@ function handleBossAttack(progressPercent) {
   const battleMessage = document.getElementById("battleMessage");
 
   if (wizard) wizard.style.transform = "scale(1.2) translateX(10px)";
-  
+
   if (spell) {
     spell.style.opacity = "1";
     spell.style.transform = "translateX(180px)";
@@ -725,7 +720,7 @@ function handleBossAttack(progressPercent) {
       spell.style.opacity = "0";
       spell.style.transform = "translateX(0px)";
     }
-    
+
     if (troll && bossCurrentHp > 0) {
       troll.style.transform = "scale(0.9) rotate(-10deg)";
       setTimeout(() => (troll.style.transform = "scale(1)"), 200);
