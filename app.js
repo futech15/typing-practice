@@ -15,11 +15,16 @@ const rawLessons = [
   typeof lesson13 !== "undefined" ? lesson13 : null,
   typeof lesson14 !== "undefined" ? lesson14 : null,
   typeof lesson15 !== "undefined" ? lesson15 : null,
-  typeof lesson11 !== "undefined" ? lesson16 : null,
-  typeof lesson12 !== "undefined" ? lesson17 : null,
-  typeof lesson13 !== "undefined" ? lesson18 : null,
-  typeof lesson14 !== "undefined" ? lesson19 : null,
-  typeof lesson15 !== "undefined" ? lesson20 : null
+  typeof lesson16 !== "undefined" ? lesson16 : null,
+  typeof lesson17 !== "undefined" ? lesson17 : null,
+  typeof lesson18 !== "undefined" ? lesson18 : null,
+  typeof lesson19 !== "undefined" ? lesson19 : null,
+  typeof lesson20 !== "undefined" ? lesson20 : null,
+  typeof lesson21 !== "undefined" ? lesson21 : null,
+  typeof lesson22 !== "undefined" ? lesson22 : null,
+  typeof lesson23 !== "undefined" ? lesson23 : null,
+  typeof lesson24 !== "undefined" ? lesson24 : null,
+  typeof lesson25 !== "undefined" ? lesson25 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
