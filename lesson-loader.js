@@ -2,19 +2,19 @@
 
 const TOTAL_LESSONS = 25;
 
-function loadLesson(number) {
+function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script");
 
-    script.src = `lessons/lesson${number}.js`;
+    script.src = src;
 
     script.onload = () => {
-      console.log(`Loaded lesson${number}.js`);
+      console.log("Loaded:", src);
       resolve();
     };
 
     script.onerror = () => {
-      console.warn(`Could not load lesson${number}.js`);
+      console.error("Could not load:", src);
       resolve();
     };
 
@@ -22,16 +22,14 @@ function loadLesson(number) {
   });
 }
 
-async function loadAllLessons() {
-  // Load lessons one at a time
+async function loadTypeLab() {
+  // Load all lesson files first
   for (let i = 1; i <= TOTAL_LESSONS; i++) {
-    await loadLesson(i);
+    await loadScript(`lessons/lesson${i}.js`);
   }
 
-  // Load app.js only after all lesson files have been attempted
-  const appScript = document.createElement("script");
-  appScript.src = "app.js";
-  document.head.appendChild(appScript);
+  // Then load app.js
+  await loadScript("app.js");
 }
 
-loadAllLessons();
+loadTypeLab();
