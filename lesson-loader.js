@@ -1,34 +1,37 @@
 // TypeLab Lesson Loader
-// Loads all lesson files first, then loads app.js.
 
 const TOTAL_LESSONS = 25;
 
-const lessonLoads = [];
+function loadLesson(number) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
 
-for (let i = 1; i <= TOTAL_LESSONS; i++) {
-  lessonLoads.push(
-    new Promise((resolve, reject) => {
-      const script = document.createElement("script");
+    script.src = `lessons/lesson${number}.js`;
 
-      script.src = `lessons/lesson${i}.js`;
+    script.onload = () => {
+      console.log(`Loaded lesson${number}.js`);
+      resolve();
+    };
 
-      script.onload = resolve;
+    script.onerror = () => {
+      console.warn(`Could not load lesson${number}.js`);
+      resolve();
+    };
 
-      script.onerror = () => {
-        reject(new Error(`Could not load lesson${i}.js`));
-      };
-
-      document.head.appendChild(script);
-    })
-  );
+    document.head.appendChild(script);
+  });
 }
 
-Promise.all(lessonLoads)
-  .then(() => {
-    const appScript = document.createElement("script");
-    appScript.src = "app.js";
-    document.head.appendChild(appScript);
-  })
-  .catch((error) => {
-    console.error("TypeLab lesson loading error:", error);
-  });
+async function loadAllLessons() {
+  // Load lessons one at a time
+  for (let i = 1; i <= TOTAL_LESSONS; i++) {
+    await loadLesson(i);
+  }
+
+  // Load app.js only after all lesson files have been attempted
+  const appScript = document.createElement("script");
+  appScript.src = "app.js";
+  document.head.appendChild(appScript);
+}
+
+loadAllLessons();
