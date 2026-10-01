@@ -88,8 +88,11 @@ const overallAccuracy = document.getElementById("overallAccuracy");
 const overallTime = document.getElementById("overallTime");
 const completedLessonsContainer = document.getElementById("completedLessons");
 
-document.addEventListener("DOMContentLoaded", initializeApp);
-
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeApp);
+} else {
+  initializeApp();
+}
 function initializeApp() {
   if (lessons.length === 0) return;
 
