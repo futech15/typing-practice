@@ -1,6 +1,6 @@
 // TypeLab Lesson Loader
 
-const TOTAL_LESSONS = 25;
+const TOTAL_LESSONS = 30;
 
 function loadScript(src) {
   return new Promise((resolve) => {
