@@ -39,7 +39,12 @@ const rawLessons = [
 typeof lesson37 !== "undefined" ? lesson37 : null,
 typeof lesson38 !== "undefined" ? lesson38 : null,
 typeof lesson39 !== "undefined" ? lesson39 : null,
-typeof lesson40 !== "undefined" ? lesson40 : null
+typeof lesson40 !== "undefined" ? lesson40 : null,
+typeof lesson41 !== "undefined" ? lesson41 : null,
+typeof lesson42 !== "undefined" ? lesson42 : null,
+typeof lesson43 !== "undefined" ? lesson43 : null,
+typeof lesson44 !== "undefined" ? lesson44 : null,
+typeof lesson45 !== "undefined" ? lesson45 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
