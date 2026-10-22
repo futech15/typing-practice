@@ -44,7 +44,12 @@ typeof lesson41 !== "undefined" ? lesson41 : null,
 typeof lesson42 !== "undefined" ? lesson42 : null,
 typeof lesson43 !== "undefined" ? lesson43 : null,
 typeof lesson44 !== "undefined" ? lesson44 : null,
-typeof lesson45 !== "undefined" ? lesson45 : null
+typeof lesson45 !== "undefined" ? lesson45 : null,
+typeof lesson46 !== "undefined" ? lesson46 : null,
+typeof lesson47 !== "undefined" ? lesson47 : null,
+typeof lesson48 !== "undefined" ? lesson48 : null,
+typeof lesson49 !== "undefined" ? lesson49 : null,
+typeof lesson50 !== "undefined" ? lesson50 : null
 ];
 
 const lessons = rawLessons.filter(Boolean);
