@@ -4,3 +4,4 @@ var lesson7 = {
   description: "Practice typing short and funny sentences.",
   text: "The fat cat sat on a hat. Fred ate a big red egg\nSam ran fast and fell. We had fun at the farm"
 };
+window.lessons.push(lesson7);
