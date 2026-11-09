@@ -4,3 +4,4 @@ var lesson17 = {
   description: "Practice capitalizing specific names, places, and titles.",
   text: "Students Visit The Library On Monday Morning To Read Classic Books\nMr. Davis And Ms. Parker Organized The Science Fair In Cleveland"
 };
+window.lessons.push(lesson17);
