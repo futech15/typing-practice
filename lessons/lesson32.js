@@ -4,3 +4,4 @@ var lesson32 = {
   description: "The most creative excuse ever.",
   text: "i finished my homework\nbut my dog ate my laptop\nthen my cat deleted the wifi\ntrust me bro"
 };
+window.lessons.push(lesson32);
