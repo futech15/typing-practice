@@ -4,3 +4,4 @@ var lesson13 = {
   description: "Practice typing a fact about our school.",
   text: "did you know Horizon Science Academy Cleveland Middle School has a four star **** overall rating\nwe are proud of our school"
 };
+window.lessons.push(lesson13);
