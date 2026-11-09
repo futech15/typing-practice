@@ -4,3 +4,4 @@ var lesson12 = {
   description: "Practice typing about everyday school life.",
   text: "the school day starts early and students get ready for class\nwe learn new things and work together every day"
 };
+window.lessons.push(lesson12);
