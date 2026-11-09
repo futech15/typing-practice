@@ -4,3 +4,4 @@ var lesson16 = {
   description: "Practice typing about school items and organization.",
   text: "notebooks, pencils, and folders keep your work organized\nhaving the right tools helps you stay prepared every day"
 };
+window.lessons.push(lesson16);
