@@ -4,3 +4,4 @@ var lesson22 = {
   description: "Practice typing about computer class.",
   text: "we opened our computers for class\nwe started a new activity\neveryone tried something different\nsome students helped their friends"
 };
+window.lessons.push(lesson22);
