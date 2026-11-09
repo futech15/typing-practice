@@ -4,3 +4,4 @@ var lesson48 = {
   description: "Practice typing about modern technology.",
   text: "technology is part of our daily lives\ncomputers help us learn new skills\nwe use the internet to find information\nbeing safe online is important"
 };
+window.lessons.push(lesson48);
