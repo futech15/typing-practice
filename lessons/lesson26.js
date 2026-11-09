@@ -4,3 +4,4 @@ var lesson26 = {
   description: "Why is everyone saying 6–7?",
   text: "someone yelled six seven\nnobody knew why\nthen everyone started laughing\nsix seven strikes again"
 };
+window.lessons.push(lesson26);
