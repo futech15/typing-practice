@@ -4,3 +4,4 @@ var lesson38 = {
   description: "A very unusual school announcement.",
   text: "the principal grabbed the microphone\nhe said today is a free pizza day\nthe whole school started cheering\nthen he said just kidding"
 };
+window.lessons.push(lesson38);
