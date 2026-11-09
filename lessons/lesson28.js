@@ -4,3 +4,4 @@ var lesson28 = {
   description: "One message becomes one hundred.",
   text: "someone sent one message\nthen everyone replied\nsomeone sent a funny picture\nnow nobody can stop typing"
 };
+window.lessons.push(lesson28);
