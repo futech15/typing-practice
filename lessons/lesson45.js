@@ -4,3 +4,4 @@ var lesson45 = {
   description: "A serious pizza situation.",
   text: "someone ordered twenty pizzas\nbut only one pizza arrived\nwe called it a national emergency\nthe delivery guy ate the rest"
 };
+window.lessons.push(lesson45);
