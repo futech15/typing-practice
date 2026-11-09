@@ -4,3 +4,4 @@ var lesson25 = {
   description: "Practice typing about learning and growing.",
   text: "every day gives us a chance to learn\nwe can make mistakes and try again\npractice helps us get better\nkeep going and do your best"
 };
+window.lessons.push(lesson25);
