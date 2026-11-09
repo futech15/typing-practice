@@ -4,3 +4,4 @@ var lesson30 = {
   description: "Everything is normal until it is not.",
   text: "the bell rang and everyone moved\nsomeone dropped a pencil\nsomeone yelled six seven\nthen the whole class started laughing"
 };
+window.lessons.push(lesson30);
