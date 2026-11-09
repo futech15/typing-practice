@@ -6,3 +6,4 @@ var lesson6 = {
   requiredHand: "right",
   text: "we see a red cat. fred had a safe start. a fast car fled. we ate a sweet treat. red star falls."
 };
+window.lessons.push(lesson6);
