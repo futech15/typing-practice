@@ -4,3 +4,4 @@ var lesson34 = {
   description: "When confidence goes wrong.",
   text: "bro said he had unlimited rizz\nthen he tripped over his shoe\neveryone started laughing\nhis rizz has left the chat"
 };
+window.lessons.push(lesson34);
