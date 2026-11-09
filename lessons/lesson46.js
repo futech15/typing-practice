@@ -4,3 +4,4 @@ var lesson46 = {
   description: "Practice typing about everyday activities.",
   text: "i wake up early every morning\ni get ready and eat breakfast\nthen i go to school and learn\nat night i prepare for tomorrow"
 };
+window.lessons.push(lesson46);
