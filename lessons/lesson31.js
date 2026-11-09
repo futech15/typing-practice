@@ -4,3 +4,4 @@ var lesson31 = {
   description: "When someone acts like a video game character.",
   text: "bro walked into a wall\nthen said hello three times\nwe thought he was an npc\nsomeone needs to restart him"
 };
+window.lessons.push(lesson30);
