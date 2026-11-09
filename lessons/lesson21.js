@@ -4,3 +4,4 @@ var lesson21 = {
   description: "Practice typing about a busy school morning.",
   text: "the morning bell rang early\nstudents walked into class\nsome were ready to learn\nothers were still waking up"
 };
+window.lessons.push(lesson21);
