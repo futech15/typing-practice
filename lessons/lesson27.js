@@ -4,3 +4,4 @@ var lesson27 = {
   description: "When your brain needs a reboot.",
   text: "my brain stopped working today\nit asked for a snack\nthen it forgot the question\nclassic brain moment"
 };
+window.lessons.push(lesson27);
