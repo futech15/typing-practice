@@ -4,3 +4,4 @@ var lesson42 = {
   description: "Even the fridge has opinions.",
   text: "i opened the fridge at midnight\nit said welcome back again\ni grabbed some cheese\nit said see you in five minutes"
 };
+window.lessons.push(lesson42);
