@@ -4,3 +4,4 @@ var lesson50 = {
   description: "Practice typing about personal goals.",
   text: "everyone has dreams for the future\nlearning new skills takes practice\nsmall steps can lead to big results\nhard work helps us achieve our goals"
 };
+window.lessons.push(lesson50);
