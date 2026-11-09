@@ -4,3 +4,4 @@ var lesson18 = {
   description: "Practice rapid alternation between UPPERCASE and lowercase.",
   text: "The Quick BROWN Fox Jumps OVER The LAZY Dog On A Sunny DAY\nFAST Typing REQUIRES Great FOCUS And CONSISTENT Daily PRACTICE"
 };
+window.lessons.push(lesson18);
