@@ -4,3 +4,4 @@ var lesson49 = {
   description: "Practice typing about teamwork.",
   text: "teamwork helps us reach our goals\nwe listen to different ideas\neveryone can contribute something\nworking together makes tasks easier"
 };
+window.lessons.push(lesson49);
