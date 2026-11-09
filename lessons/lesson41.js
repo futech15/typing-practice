@@ -4,3 +4,4 @@ var lesson41 = {
   description: "The homework disappeared!",
   text: "i did my homework in my dream\nmy teacher asked where it was\ni said check your dreams\nshe was not impressed"
 };
+window.lessons.push(lesson41);
