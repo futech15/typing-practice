@@ -1,58 +1,8 @@
-// Safely gather lesson definitions
-const rawLessons = [
-  typeof lesson1 !== "undefined" ? lesson1 : null,
-  typeof lesson2 !== "undefined" ? lesson2 : null,
-  typeof lesson3 !== "undefined" ? lesson3 : null,
-  typeof lesson4 !== "undefined" ? lesson4 : null,
-  typeof lesson5 !== "undefined" ? lesson5 : null,
-  typeof lesson6 !== "undefined" ? lesson6 : null,
-  typeof lesson7 !== "undefined" ? lesson7 : null,
-  typeof lesson8 !== "undefined" ? lesson8 : null,
-  typeof lesson9 !== "undefined" ? lesson9 : null,
-  typeof lesson10 !== "undefined" ? lesson10 : null,
-  typeof lesson11 !== "undefined" ? lesson11 : null,
-  typeof lesson12 !== "undefined" ? lesson12 : null,
-  typeof lesson13 !== "undefined" ? lesson13 : null,
-  typeof lesson14 !== "undefined" ? lesson14 : null,
-  typeof lesson15 !== "undefined" ? lesson15 : null,
-  typeof lesson16 !== "undefined" ? lesson16 : null,
-  typeof lesson17 !== "undefined" ? lesson17 : null,
-  typeof lesson18 !== "undefined" ? lesson18 : null,
-  typeof lesson19 !== "undefined" ? lesson19 : null,
-  typeof lesson20 !== "undefined" ? lesson20 : null,
-  typeof lesson21 !== "undefined" ? lesson21 : null,
-  typeof lesson22 !== "undefined" ? lesson22 : null,
-  typeof lesson23 !== "undefined" ? lesson23 : null,
-  typeof lesson24 !== "undefined" ? lesson24 : null,
-  typeof lesson25 !== "undefined" ? lesson25 : null,
-  typeof lesson26 !== "undefined" ? lesson26 : null,
-  typeof lesson27 !== "undefined" ? lesson27 : null,
-  typeof lesson28 !== "undefined" ? lesson28 : null,
-  typeof lesson29 !== "undefined" ? lesson29 : null,
-  typeof lesson30 !== "undefined" ? lesson30 : null,
-  typeof lesson31 !== "undefined" ? lesson31 : null,
-  typeof lesson32 !== "undefined" ? lesson32 : null,
-  typeof lesson33 !== "undefined" ? lesson33 : null,
-  typeof lesson34 !== "undefined" ? lesson34 : null,
-  typeof lesson35 !== "undefined" ? lesson35 : null,
-  typeof lesson36 !== "undefined" ? lesson36 : null,
-typeof lesson37 !== "undefined" ? lesson37 : null,
-typeof lesson38 !== "undefined" ? lesson38 : null,
-typeof lesson39 !== "undefined" ? lesson39 : null,
-typeof lesson40 !== "undefined" ? lesson40 : null,
-typeof lesson41 !== "undefined" ? lesson41 : null,
-typeof lesson42 !== "undefined" ? lesson42 : null,
-typeof lesson43 !== "undefined" ? lesson43 : null,
-typeof lesson44 !== "undefined" ? lesson44 : null,
-typeof lesson45 !== "undefined" ? lesson45 : null,
-typeof lesson46 !== "undefined" ? lesson46 : null,
-typeof lesson47 !== "undefined" ? lesson47 : null,
-typeof lesson48 !== "undefined" ? lesson48 : null,
-typeof lesson49 !== "undefined" ? lesson49 : null,
-typeof lesson50 !== "undefined" ? lesson50 : null
-];
 
-const lessons = rawLessons.filter(Boolean);
+// Automatically gather lessons registered by lesson files
+window.lessons = window.lessons || [];
+
+const lessons = window.lessons;
 const STORAGE_KEY = "typingPracticeResults";
 
 let selectedLesson = null;
@@ -60,6 +10,7 @@ let selectedLessonIndex = 0;
 let isRunning = false;
 let startTime = null;
 let timerInterval = null;
+
 
 // Universal Key-Hold State
 let activeHoldKey = null;
