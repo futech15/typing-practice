@@ -4,3 +4,4 @@ var lesson43 = {
   description: "Gaming confidence gone wrong.",
   text: "bro said he was a pro gamer\nhe lost in the first ten seconds\nthen blamed the controller\nhis controller was not even on"
 };
+window.lessons.push(lesson43);
