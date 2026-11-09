@@ -5,3 +5,4 @@ const lesson11 = {
   text: "quick wizard spells overcome tough battle obstacles",
   isBattleLesson: true
 };
+window.lessons.push(lesson11);
