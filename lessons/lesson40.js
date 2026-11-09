@@ -4,3 +4,4 @@ var lesson40 = {
   description: "Too much brain rot for one classroom.",
   text: "sigma cat entered the classroom\nbro tried to show off his rizz\nthen slipped on a banana peel\nhis aura points are now negative"
 };
+window.lessons.push(lesson40);
