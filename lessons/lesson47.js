@@ -4,3 +4,4 @@ var lesson47 = {
   description: "Practice typing about staying healthy.",
   text: "drinking water is important\neating healthy food gives us energy\nexercise helps our bodies stay strong\ngood sleep keeps our minds fresh"
 };
+window.lessons.push(lesson47);
