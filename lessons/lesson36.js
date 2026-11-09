@@ -4,3 +4,4 @@ var lesson36 = {
   description: "Something suspicious is happening.",
   text: "my backpack started making noise\ni opened it very slowly\nit was just my lunch\nbro that sandwich was sus"
 };
+window.lessons.push(lesson36);
